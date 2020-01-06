@@ -1,0 +1,35 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Faculty Administrator Main Page</title>
+</head>
+<body>
+    <div>
+        <input id="assing_student" type="submit" value="Assing Student" 
+            onclick="location.href='@Url.Action("Assign_students", "FacultyAdministrator")'"/>
+
+        <br />
+        <input id="Manage_course_schedule" type="submit" value="Manage Course Schedule"
+               onclick="location.href='@Url.Action("Manage_course_schedule", "FacultyAdministrator")'"/>
+        <br />
+        <input id="Manage_exam_schedule" type="submit" value="Manage Exam Schedule" 
+               onclick="location.href='@Url.Action("Manage_exam_schedule", "FacultyAdministrator")'"/>
+        <br />
+        <input id="update_course_grades" type="submit" value="Update Course Grades" 
+               onclick="location.href='@Url.Action("Update_course_grades", "FacultyAdministrator")'"/>
+        <br />
+        <input id="exit" type="submit" value="Exit"
+               onclick="location.href='@Url.Action("Exit", "FacultyAdministrator")'"/>
+
+
+
+    </div>
+</body>
+</html>

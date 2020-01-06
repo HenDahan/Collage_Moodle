@@ -1,0 +1,31 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Lecturer Main Page</title>
+</head>
+<body>
+    <div>
+        <input id="View_schedule" type="submit" value="View Schedule"
+               onclick="location.href='@Url.Action("View_schedule", "Lecturer")'" />
+        <br />
+        <input id="view_student_list_of_a_course" type="submit" value="View Student List of a course"
+               onclick="location.href='@Url.Action("view_student_list_of_a_course", "Lecturer")'" />
+        <br />
+        <input id="View_exam_grades" type="submit" value="View Exam Grades"
+               onclick="location.href='@Url.Action("View_exam_grades", "Lecturer")'" />
+        <br />
+        <input id="Update_course_grades" type="submit" value="Update Course Grades"
+               onclick="location.href='@Url.Action("Update_course_grades", "Lecturer")'" />
+        <br />
+        <input id="exit" type="submit" value="Exit"
+               onclick="location.href='@Url.Action("Exit", "Lecturer")'" />
+
+    </div>
+</body>
+</html>

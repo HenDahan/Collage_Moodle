@@ -1,0 +1,22 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>UpdateCourseGradesPage</title>
+</head>
+<body>
+    <div>
+        <i>Course Name:</i>  <input type="text" id="course_name" value="Computer Communication" />
+        <br />
+        <input id="update" type="submit" value="Update" />
+        <br />
+        <input id="back" type="submit" value="Back"
+               onclick="location.href='@Url.Action("Index", "Lecturer")'" />
+    </div>
+</body>
+</html>

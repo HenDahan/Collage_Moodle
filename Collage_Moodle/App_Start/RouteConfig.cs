@@ -14,10 +14,12 @@ namespace Collage_Moodle
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
-                name: "Serial number",
-                url: "serial",
-                defaults: new { controller = "Home", action = "serial" }
+                name: "Home",
+                url: "",
+                defaults: new { controller = "Login", action = "Index", 
+                    id = UrlParameter.Optional }
             );
+
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

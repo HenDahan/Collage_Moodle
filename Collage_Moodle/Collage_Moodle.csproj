@@ -128,10 +128,21 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\FacultyAdministratorController.cs" />
+    <Compile Include="Controllers\LecturerController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\DAL.cs" />
+    <Compile Include="Controllers\PermissionController.cs" />
+    <Compile Include="Controllers\StudentController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Courses.cs" />
+    <Compile Include="Models\Exams.cs" />
+    <Compile Include="Models\Login.cs" />
+    <Compile Include="Models\Students.cs" />
+    <Compile Include="Models\Users.cs" />
+    <Compile Include="Models\UsersViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -168,13 +179,23 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Login\LoginView.cshtml" />
+    <Content Include="Views\Student\StudentMainPage.cshtml" />
+    <Content Include="Views\Lecturer\LecturerMainPage.cshtml" />
+    <Content Include="Views\FacultyAdministrator\FacultyAdministratorMainPage.cshtml" />
+    <Content Include="Views\FacultyAdministrator\Manage_course_schedule.cshtml" />
+    <Content Include="Views\FacultyAdministrator\Assign_students.cshtml" />
+    <Content Include="Views\FacultyAdministrator\Manage_exam_schedule.cshtml" />
+    <Content Include="Views\FacultyAdministrator\Update_course_grades.cshtml" />
+    <Content Include="Views\Lecturer\View_schedule.cshtml" />
+    <Content Include="Views\Lecturer\view_student_list_of_a_course.cshtml" />
+    <Content Include="Views\Lecturer\View_exam_grades.cshtml" />
+    <Content Include="Views\Lecturer\Update_course_grades.cshtml" />
+    <Content Include="Views\Student\View_schedule.cshtml" />
+    <Content Include="Views\Student\View_exam_schedule.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

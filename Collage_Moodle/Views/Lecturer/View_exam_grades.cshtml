@@ -1,0 +1,24 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ViewExamGradesPage</title>
+</head>
+<body>
+    <div>
+
+        <i>Course Name:</i>  <input type="text" id="course_name" value="Computer Communication" />
+        <br />
+        <input id="view" type="submit" value="View" />
+        <br />
+        <input id="back" type="submit" value="Back"
+               onclick="location.href='@Url.Action("Index", "Lecturer")'"/>
+    </div>
+</body>
+</html>

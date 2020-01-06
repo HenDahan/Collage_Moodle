@@ -1,0 +1,27 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Student Main Page</title>
+</head>
+<body>
+    <div>
+        <input id="View_schedule" type="submit" value="View Schedule" 
+            onclick="location.href='@Url.Action("View_schedule", "Student")'"/>
+
+        <br />
+        <input id="View_exam_schedule" type="submit" value="View Exam Schedule"
+            onclick="location.href='@Url.Action("View_exam_schedule", "Student")'"/>
+
+        <br />
+        <input id="exit" type="submit" value="Exit"
+            onclick="location.href='@Url.Action("Exit", "Student")'"/>
+    </div>
+</body>
+</html>
