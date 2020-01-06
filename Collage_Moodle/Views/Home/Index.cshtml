@@ -1,0 +1,62 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    //Layout = "MyLayout.cs";
+}
+
+
+
+
+
+<div class="row">
+    <div class="col-md-6 margin-top-20">
+        <a href="#" class="btn btn-primary btn-lg btn-block">
+            <span class="glyphicon glyphicon-circle-arrow-up"></span>
+            Register
+        </a>
+    </div>
+
+    <div class="col-md-6 margin-top-20">
+        <a href="#" class="btn btn-primary btn-lg btn-block">
+            <span class="glyphicon glyphicon-circle-arrow-right"></span>
+            Log in
+        </a>
+    </div>
+
+
+</div>
+
+@section scripts{
+    <script>var testing = true;</script>
+    }
+
+
+
+
+@*
+
+You are using @Request.Browser.Browser, and that's great! Email us at support@gmail.com 
+if you have any problems, send us a message on @@mvcatm.
+
+@{ var amounts = new List<Decimal> { 100, 25.50m, -40, 275.99m };}
+
+<ul>
+    @foreach(decimal amount in amounts)
+    {
+        <li>@formatAmount(amount)</li>
+        <text> normal text</text>
+        @: extra text;
+    }
+
+</ul>
+
+    @helper formatAmount(decimal amount)
+    {
+var color = "green";
+if (amount < 0) { color = "red"; }
+else if (amount >= 100) { color = "blue"; }
+
+
+    <span style= "color:@color">@String.Format("{0:c} ", amount)</span>
+}
+
+    *@
