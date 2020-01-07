@@ -15,11 +15,10 @@ namespace Collage_Moodle.Models
         public string Courses_cName { get; set; }
         [Key, Column(Order = 1)]
         [Required]
-        public char moed { get; set; }
-        [Required]
-        public DateTime date { get; set; }
-        [Required]
-        [StringLength(50, ErrorMessage = "Classroom should be no more than 50 characters.")]
-        public string classroom { get; set; }
+        [Range(000001, 999999999, ErrorMessage ="Please enter an ID between 6 to 9 digits.")]
+        public int studentID{ get; set; }
+        
+        public int grade { get; set; }
+
     }
 }
