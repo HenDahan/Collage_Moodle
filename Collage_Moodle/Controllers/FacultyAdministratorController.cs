@@ -12,7 +12,6 @@ namespace Collage_Moodle.Controllers
     {
         private PermissionController perm = new PermissionController();
         DAL dal = new DAL();
-        // GET: FacultyAdministrator
         public ActionResult Index()
         {
             Users user = (Users)Session["user"];
@@ -53,20 +52,30 @@ namespace Collage_Moodle.Controllers
             else
             {
                 string courseName = assignS.course_name.ToString();
-                int userID = assignS.student_ID;
-                dal.Students.Add(new Students { Courses_cName = courseName, Users_userID = userID });
-                try
+                int studentID = assignS.student_ID;
+                if (check_student(studentID, courseName))
                 {
-                    dal.SaveChanges();
-                }
-                catch
-                {
-                    TempData["Message"] = "Assigned Failed, The student in this course already exists.";
-                    return perm.CheckPermission(user);
 
+
+                    dal.Students.Add(new Students { Courses_cName = courseName, Users_userID = studentID });
+                    try
+                    {
+                        dal.SaveChanges();
+                    }
+                    catch
+                    {
+                        TempData["Message"] = "Assigned Failed, The student in this course already exists.";
+                        return perm.CheckPermission(user);
+
+                    }
+                    TempData["Message"] = "Assigned successfully";
+                    return perm.CheckPermission(user);
                 }
-                TempData["Message"] = "Assigned successfully";
-                return perm.CheckPermission(user);
+                else
+                {
+                    TempData["Message"] = "Failed - The student cannot study two courses at the same time!";
+                    return perm.CheckPermission(user);
+                }
 
             }
 
@@ -118,8 +127,6 @@ namespace Collage_Moodle.Controllers
             }
 
         }
-
-
         public ActionResult ManageExamSchedule()
         {
             Users user = (Users)Session["user"];
@@ -204,27 +211,100 @@ namespace Collage_Moodle.Controllers
                                       select x).ToList<Courses>();
                 if (dbCourse.Count > 0)
                 {
-                    Courses tempCourse = dal.Courses.Single<Courses>(x => x.courseName == courseName);
-                    tempCourse.day = day;
-                    tempCourse.hour = hour;
-                    tempCourse.classroom = classroom;
-                    tempCourse.Users_userID = lecturerID;
+                    if (check_lecturer(lecturerID, day, hour, 1))
+                    {
+                        Courses tempCourse = dal.Courses.Single<Courses>(x => x.courseName == courseName);
+                        tempCourse.day = day;
+                        tempCourse.hour = hour;
+                        tempCourse.classroom = classroom;
+                        tempCourse.Users_lecturerID = lecturerID;
 
-                    dal.SaveChanges();
-                    TempData["Message"] = "The course data has been UPDATED successfully.";
-                    return perm.CheckPermission(user);
+                        dal.SaveChanges();
+                        TempData["Message"] = "The course data has been UPDATED successfully.";
+                        return perm.CheckPermission(user);
+                    }
+                    else
+                    {
+                        TempData["Message"] = "Error - The lecturer cannot lecture another course at the same time!";
+                        return perm.CheckPermission(user);
+                    }
                 }
                 else
                 {
-                    dal.Courses.Add(new Courses { courseName = courseName, day = day, hour = hour, classroom = classroom, Users_userID = lecturerID });
-                    dal.SaveChanges();
-                    TempData["Message"] = "The course data has been CREATED successfully.";
-                    return perm.CheckPermission(user);
+                    if (check_lecturer(lecturerID, day, hour, 1))
+                    {
+                        dal.Courses.Add(new Courses { courseName = courseName, day = day, hour = hour, classroom = classroom, Users_lecturerID = lecturerID });
+                        dal.SaveChanges();
+                        TempData["Message"] = "The course data has been CREATED successfully.";
+                        return perm.CheckPermission(user);
+                    }
+                    else
+                    {
+                        TempData["Message"] = "Error - The lecturer cannot lecture another course at the same time!";
+                        return perm.CheckPermission(user);
+                    }
                 }
             }
         }
 
+        private bool check_lecturer(int id, string day, string hour, int type)
+        {
 
+            List<Courses> dbCourses = (from x in dal.Courses
+                                        where (x.Users_lecturerID.Equals(id))
+                                        select x).ToList<Courses>();
+
+            float[] l_hour = new float[2];
+            float[] c_hour = new float[2];
+            l_hour[0] = float.Parse(hour.Substring(0, 5).Replace(':', '.'));
+            l_hour[1] = float.Parse(hour.Substring(9, 5).Replace(':', '.'));
+            foreach (Courses course in dbCourses)
+            {
+                if (course.day == day)
+                {
+                    c_hour[0] = float.Parse(course.hour.Substring(0, 5).Replace(':', '.'));
+                    c_hour[1] = float.Parse(course.hour.Substring(9, 5).Replace(':', '.'));
+
+                    if ((l_hour[0] > c_hour[0] && l_hour[0] < c_hour[1]) || (l_hour[1] > c_hour[0] && l_hour[1] < c_hour[1]) || (c_hour[0] > l_hour[0] && c_hour[0] < l_hour[1]))
+                    {
+                        return false;
+                    }
+                }
+            }
+                return true;
+        }
+
+        private bool check_student(int id, string courseName)
+        {
+
+            List<Courses> dbCourses = (from x in dal.Courses
+                                       where (!x.courseName.Equals(courseName))
+                                       select x).ToList<Courses>();
+            List<Courses> hisCourse = (from x in dal.Courses
+                                       where (x.courseName.Equals(courseName))
+                                       select x).ToList<Courses>();
+            
+            float[] s_hour = new float[2];
+            float[] c_hour = new float[2];
+            string student_day = hisCourse[0].day;
+            string student_hour = hisCourse[0].hour;
+            s_hour[0] = float.Parse(student_hour.Substring(0, 5).Replace(':', '.'));
+            s_hour[1] = float.Parse(student_hour.Substring(9, 5).Replace(':', '.'));
+            foreach (Courses course in dbCourses)
+            {
+                if (course.day == student_day)
+                {
+                    c_hour[0] = float.Parse(course.hour.Substring(0, 5).Replace(':', '.'));
+                    c_hour[1] = float.Parse(course.hour.Substring(9, 5).Replace(':', '.'));
+
+                    if ((s_hour[0] > c_hour[0] && s_hour[0] < c_hour[1]) || (s_hour[1] > c_hour[0] && s_hour[1] < c_hour[1]) || (c_hour[0] > s_hour[0] && c_hour[0] < s_hour[1]))
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
 
         public ActionResult Exit()
         {

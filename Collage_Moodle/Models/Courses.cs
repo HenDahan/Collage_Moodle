@@ -20,7 +20,7 @@ namespace Collage_Moodle.Models
         [StringLength(50, ErrorMessage = "Classroom should be no more than 50 characters.")]
         public string classroom { get; set; }
         [Required]
-        public int Users_userID { get; set; }
+        public int Users_lecturerID { get; set; }
 
     }
 }
