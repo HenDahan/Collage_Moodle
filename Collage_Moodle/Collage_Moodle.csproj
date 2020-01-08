@@ -141,6 +141,7 @@
     <Compile Include="Models\Courses.cs" />
     <Compile Include="Models\Exams.cs" />
     <Compile Include="Models\Login.cs" />
+    <Compile Include="Models\ManageCourseSchedule.cs" />
     <Compile Include="Models\ManageExamSchedule.cs" />
     <Compile Include="Models\Students.cs" />
     <Compile Include="Models\UpdateCourseGrades.cs" />
@@ -194,6 +195,7 @@
     <Content Include="Views\Login\Login.cshtml" />
     <Content Include="Views\FacultyAdministrator\UpdateCourseGrades.cshtml" />
     <Content Include="Views\FacultyAdministrator\ManageExamSchedule.cshtml" />
+    <Content Include="Views\FacultyAdministrator\ManageCourseSchedule.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -22,28 +22,28 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-        <div class="form-group">
-            <div class="col-md-10 margin-top-10">
-                <input type="submit" value="Assing Student" class="btn btn-default"
-                       onclick="location.href='@Url.Action("AssignStudents", "FacultyAdministrator")'" />
-            </div>
-            <div class="col-md-10 margin-top-10">
-                <input type="submit" value="Manage Course Schedule" class="btn btn-default"
-                       onclick="location.href='@Url.Action("ManageCourseSchedule", "FacultyAdministrator")'" />
-            </div>
-            <div class="col-md-10 margin-top-10">
-                <input type="submit" value="Manage Exam Schedule" class="btn btn-default"
-                       onclick="location.href='@Url.Action("ManageExamSchedule", "FacultyAdministrator")'" />
-            </div>
-            <div class="col-md-10 margin-top-10 ">
-                <input type="submit" value="Update Course Grades" class="btn btn-default"
-                       onclick="location.href='@Url.Action("UpdateCourseGrades", "FacultyAdministrator")'" />
-            </div>
-            <div class="col-md-10 margin-top-50">
-                <input type="submit" value="Exit" class="btn btn-default"
-                       onclick="location.href='@Url.Action("Exit", "FacultyAdministrator")'" />
-            </div>
+    <div class="form-group">
+        <div class="col-md-10 margin-top-10">
+            <input type="submit" value="Assing Student" class="btn btn-default"
+                   onclick="location.href='@Url.Action("AssignStudents", "FacultyAdministrator")'" />
         </div>
+        <div class="col-md-10 margin-top-10 ">
+            <input type="submit" value="Update Course Grades" class="btn btn-default"
+                   onclick="location.href='@Url.Action("UpdateCourseGrades", "FacultyAdministrator")'" />
+        </div>
+        <div class="col-md-10 margin-top-10">
+            <input type="submit" value="Manage Exam Schedule" class="btn btn-default"
+                   onclick="location.href='@Url.Action("ManageExamSchedule", "FacultyAdministrator")'" />
+        </div>
+        <div class="col-md-10 margin-top-10">
+            <input type="submit" value="Manage Course Schedule" class="btn btn-default"
+                   onclick="location.href='@Url.Action("ManageCourseSchedule", "FacultyAdministrator")'" />
+        </div>
+        <div class="col-md-10 margin-top-50">
+            <input type="submit" value="Exit" class="btn btn-default"
+                   onclick="location.href='@Url.Action("Exit", "FacultyAdministrator")'" />
+        </div>
+    </div>
     </div>
 </body>
 

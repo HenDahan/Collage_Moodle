@@ -17,7 +17,7 @@ namespace Collage_Moodle.Models
 
         [Key, Column(Order = 1)]
         [Required(ErrorMessage = "The moed cannot be empty.")]
-        [StringLength(1, ErrorMessage = "the moed is either 'A' or 'B'.")]
+        [RegularExpression("[A-B]$", ErrorMessage = "The moed should be only 'A' or 'B'.")]
         public string moed { get; set; }
 
         [Required(ErrorMessage = "The date cannot be empty.")]

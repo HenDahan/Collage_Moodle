@@ -72,13 +72,52 @@ namespace Collage_Moodle.Controllers
 
         }
 
-        /*
-        public JsonResult ViewCourseInfo(string courseName)
+        public ActionResult UpdateCourseGrades()
         {
+            Users user = (Users)Session["user"];
+            if (user == null)
+                return RedirectToAction("Index", "Login");
+            else if (user.permission != 2)
+                return perm.CheckPermission(user);
+            else
+            {
+                UpdateCourseGrades update_grade = new UpdateCourseGrades();
+                return View(update_grade);
+            }
+        }
 
-            return Json();
-        }*/
+        [HttpPost]
+        public ActionResult UpdateCourseGrades(UpdateCourseGrades update_grade)
+        {
+            Users user = (Users)Session["user"];
+            if (user == null)
+                return RedirectToAction("Index", "Login");
+            else if (user.permission != 2)
+                return perm.CheckPermission(user);
+            else
+            {
+                string courseName = update_grade.courseName;
+                int userID = update_grade.studentID;
+                int new_grade = update_grade.grade;
+                List<Students> dbStudent = (from x in dal.Students
+                                            where (x.Users_userID.Equals(userID) && x.Courses_cName.Equals(courseName))
+                                            select x).ToList<Students>();
+                if (dbStudent.Count > 0)
+                {
+                    Students tempStudent = dal.Students.Single<Students>(x => x.Courses_cName == courseName && x.Users_userID == userID);
+                    tempStudent.grade = new_grade;
+                    dal.SaveChanges();
+                    TempData["Message"] = "Grade Updated successfully";
+                    return perm.CheckPermission(user);
+                }
+                else
+                {
+                    TempData["Message"] = "There is no such user ID studing that course.";
+                    return perm.CheckPermission(user);
+                }
+            }
 
+        }
 
 
         public ActionResult ManageExamSchedule()
@@ -131,7 +170,7 @@ namespace Collage_Moodle.Controllers
             }
         }
 
-        public ActionResult UpdateCourseGrades()
+        public ActionResult ManageCourseSchedule()
         {
             Users user = (Users)Session["user"];
             if (user == null)
@@ -140,13 +179,12 @@ namespace Collage_Moodle.Controllers
                 return perm.CheckPermission(user);
             else
             {
-                UpdateCourseGrades update_grade = new UpdateCourseGrades();
-                return View(update_grade);
+                ManageCourseSchedule update_course = new ManageCourseSchedule();
+                return View(update_course);
             }
         }
-
         [HttpPost]
-        public ActionResult UpdateCourseGrades(UpdateCourseGrades update_grade)
+        public ActionResult ManageCourseSchedule(ManageCourseSchedule update_course)
         {
             Users user = (Users)Session["user"];
             if (user == null)
@@ -155,28 +193,38 @@ namespace Collage_Moodle.Controllers
                 return perm.CheckPermission(user);
             else
             {
-                string courseName = update_grade.courseName;
-                int userID = update_grade.studentID;
-                int new_grade = update_grade.grade;
-                List<Students> dbStudent = (from x in dal.Students
-                                        where (x.Users_userID.Equals(userID) && x.Courses_cName.Equals(courseName))
-                                        select x).ToList<Students>();
-                if (dbStudent.Count > 0)
+                string courseName = update_course.course_name;
+                string day = update_course.day;
+                string hour = update_course.hour;
+                string classroom = update_course.classroom;
+                int lecturerID = update_course.Lecturer_id;
+
+                List<Courses> dbCourse = (from x in dal.Courses
+                                        where (x.courseName.Equals(courseName))
+                                      select x).ToList<Courses>();
+                if (dbCourse.Count > 0)
                 {
-                    Students tempStudent = dal.Students.Single<Students>(x => x.Courses_cName == courseName && x.Users_userID == userID);
-                    tempStudent.grade = new_grade;
+                    Courses tempCourse = dal.Courses.Single<Courses>(x => x.courseName == courseName);
+                    tempCourse.day = day;
+                    tempCourse.hour = hour;
+                    tempCourse.classroom = classroom;
+                    tempCourse.Users_userID = lecturerID;
+
                     dal.SaveChanges();
-                    TempData["Message"] = "Grade Updated successfully";
+                    TempData["Message"] = "The course data has been UPDATED successfully.";
                     return perm.CheckPermission(user);
                 }
                 else
                 {
-                    TempData["Message"] = "There is no such user ID studing that course.";
+                    dal.Courses.Add(new Courses { courseName = courseName, day = day, hour = hour, classroom = classroom, Users_userID = lecturerID });
+                    dal.SaveChanges();
+                    TempData["Message"] = "The course data has been CREATED successfully.";
                     return perm.CheckPermission(user);
                 }
             }
-
         }
+
+
 
         public ActionResult Exit()
         {

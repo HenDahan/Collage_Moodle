@@ -15,12 +15,12 @@ namespace Collage_Moodle.Models
         [Required]
          public string day { get; set; }
         [Required]
-        public TimeSpan hour { get; set; }
+        public string hour { get; set; }
         [Required]
         [StringLength(50, ErrorMessage = "Classroom should be no more than 50 characters.")]
         public string classroom { get; set; }
         [Required]
-        public int User_uID { get; set; }
+        public int Users_userID { get; set; }
 
     }
 }
