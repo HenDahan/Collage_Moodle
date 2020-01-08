@@ -16,9 +16,10 @@ namespace Collage_Moodle.Models
         [Key, Column(Order = 1)]
         [Required]
         [Range(000001, 999999999, ErrorMessage ="Please enter an ID between 6 to 9 digits.")]
-        public int studentID{ get; set; }
+        public int Users_userID{ get; set; }
         
-        public int grade { get; set; }
+        public int? grade { get; set; }
+
 
     }
 }

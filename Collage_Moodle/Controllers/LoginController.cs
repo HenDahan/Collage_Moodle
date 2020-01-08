@@ -40,7 +40,7 @@ namespace Collage_Moodle.Controllers
             if (usersList.Count > 0)
               */
             {
-                Session["user"] = new Users { userName = userName, password = password, permission = dbUser.permission};
+                Session["user"] = new Users { userID = dbUser.userID , userName = userName, password = password, permission = dbUser.permission};
                 return perm.CheckPermission((Users)Session["user"]);
             }
             else

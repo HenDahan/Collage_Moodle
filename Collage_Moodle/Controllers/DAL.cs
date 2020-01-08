@@ -24,5 +24,6 @@ namespace Collage_Moodle.Dal
         public DbSet<Exams> Exams { get; set; }
         public DbSet<Students> Students { get; set; }
 
+        public System.Data.Entity.DbSet<Collage_Moodle.Models.AssignStudent> AssignStudents { get; set; }
     }
 }

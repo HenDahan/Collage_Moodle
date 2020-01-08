@@ -137,12 +137,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AssignStudent.cs" />
     <Compile Include="Models\Courses.cs" />
     <Compile Include="Models\Exams.cs" />
     <Compile Include="Models\Login.cs" />
     <Compile Include="Models\Students.cs" />
     <Compile Include="Models\Users.cs" />
-    <Compile Include="Models\UsersViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -184,7 +184,6 @@
     <Content Include="Views\Lecturer\LecturerMainPage.cshtml" />
     <Content Include="Views\FacultyAdministrator\FacultyAdministratorMainPage.cshtml" />
     <Content Include="Views\FacultyAdministrator\Manage_course_schedule.cshtml" />
-    <Content Include="Views\FacultyAdministrator\Assign_students.cshtml" />
     <Content Include="Views\FacultyAdministrator\Manage_exam_schedule.cshtml" />
     <Content Include="Views\FacultyAdministrator\Update_course_grades.cshtml" />
     <Content Include="Views\Lecturer\View_schedule.cshtml" />
@@ -193,6 +192,7 @@
     <Content Include="Views\Lecturer\Update_course_grades.cshtml" />
     <Content Include="Views\Student\View_schedule.cshtml" />
     <Content Include="Views\Student\View_exam_schedule.cshtml" />
+    <Content Include="Views\FacultyAdministrator\Assign_students.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
