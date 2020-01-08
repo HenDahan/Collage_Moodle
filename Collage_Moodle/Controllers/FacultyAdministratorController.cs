@@ -52,9 +52,8 @@ namespace Collage_Moodle.Controllers
                 return perm.CheckPermission(user);
             else
             {
-
-                int userID = assignS.studentID;
-                string courseName = assignS.courseName.ToString();
+                string courseName = assignS.course_name.ToString();
+                int userID = assignS.student_ID;
                 dal.Students.Add(new Students { Courses_cName = courseName, Users_userID = userID });
                 try
                 {
@@ -62,11 +61,11 @@ namespace Collage_Moodle.Controllers
                 }
                 catch
                 {
-                    TempData["Message"] = "Assigned succesfully";
+                    TempData["Message"] = "Assigned Failed, The student in this course already exists.";
                     return perm.CheckPermission(user);
 
                 }
-                TempData["Message"] = "Assigned succesfully";
+                TempData["Message"] = "Assigned successfully";
                 return perm.CheckPermission(user);
 
             }
@@ -81,18 +80,8 @@ namespace Collage_Moodle.Controllers
         }*/
 
 
-        public ActionResult Manage_course_schedule()
-        {
-            Users user = (Users)Session["user"];
-            if (user == null)
-                return RedirectToAction("Index", "Login");
-            else if (user.permission != 2)
-                return perm.CheckPermission(user);
-            else
-                return View("Manage_course_schedule");
-        }
 
-        public ActionResult Manage_exam_schedule()
+        public ActionResult ManageExamSchedule()
         {
             Users user = (Users)Session["user"];
             if (user == null)
@@ -100,7 +89,46 @@ namespace Collage_Moodle.Controllers
             else if (user.permission != 2)
                 return perm.CheckPermission(user);
             else
-                return View("Manage_exam_schedule");
+            {
+                ManageExamSchedule update_exam = new ManageExamSchedule();
+                return View(update_exam);
+            }
+        }
+        [HttpPost]
+        public ActionResult ManageExamSchedule(ManageExamSchedule update_exam)
+        {
+            Users user = (Users)Session["user"];
+            if (user == null)
+                return RedirectToAction("Index", "Login");
+            else if (user.permission != 2)
+                return perm.CheckPermission(user);
+            else
+            {
+                string courseName = update_exam.course_name;
+                string moed = update_exam.moed;
+                string new_date = update_exam.new_date;
+                string new_classroom = update_exam.new_classroom;
+                List<Exams> dbExam = (from x in dal.Exams
+                                    where (x.Courses_cName.Equals(courseName) && x.moed.Equals(moed))
+                                       select x).ToList<Exams>();
+                if (dbExam.Count > 0)
+                {
+                    Exams tempExam = dal.Exams.Single<Exams>(x => x.Courses_cName == courseName && x.moed == moed);
+                    tempExam.date = new_date;
+                    tempExam.classroom = new_classroom;
+
+                    dal.SaveChanges();
+                    TempData["Message"] = "The exam date and classroom UPDATED successfully.";
+                    return perm.CheckPermission(user);
+                }
+                else
+                {
+                    dal.Exams.Add(new Exams { Courses_cName = courseName, moed = moed, date = new_date, classroom = new_classroom });
+                    dal.SaveChanges();
+                    TempData["Message"] = "The exam datae and class CREATED successfully.";
+                    return perm.CheckPermission(user);
+                }
+            }
         }
 
         public ActionResult UpdateCourseGrades()
@@ -127,19 +155,18 @@ namespace Collage_Moodle.Controllers
                 return perm.CheckPermission(user);
             else
             {
-
+                string courseName = update_grade.courseName;
                 int userID = update_grade.studentID;
                 int new_grade = update_grade.grade;
-                string courseName = update_grade.courseName.ToString();
-                List<Students> list = (from x in dal.Students
+                List<Students> dbStudent = (from x in dal.Students
                                         where (x.Users_userID.Equals(userID) && x.Courses_cName.Equals(courseName))
                                         select x).ToList<Students>();
-                if (list.Count > 0)
+                if (dbStudent.Count > 0)
                 {
-                    Students dbstudent = dal.Students.Single<Students>(x => x.Courses_cName == courseName && x.Users_userID == userID);
-                    dbstudent.grade = new_grade;
+                    Students tempStudent = dal.Students.Single<Students>(x => x.Courses_cName == courseName && x.Users_userID == userID);
+                    tempStudent.grade = new_grade;
                     dal.SaveChanges();
-                    TempData["Message"] = "Grade Updated succesfully";
+                    TempData["Message"] = "Grade Updated successfully";
                     return perm.CheckPermission(user);
                 }
                 else

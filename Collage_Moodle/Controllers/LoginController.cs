@@ -37,8 +37,6 @@ namespace Collage_Moodle.Controllers
             if (list.Count > 0)
             {
 
-
-
                 var dbUser = dal.Users.Single<Users>(x => x.userName == userName && x.password == password);
 
                 Session["user"] = new Users { userID = dbUser.userID, userName = userName, password = password, permission = dbUser.permission };

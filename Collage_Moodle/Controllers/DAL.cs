@@ -29,5 +29,7 @@ namespace Collage_Moodle.Dal
         public System.Data.Entity.DbSet<Collage_Moodle.Models.Login> Logins { get; set; }
 
         public System.Data.Entity.DbSet<Collage_Moodle.Models.UpdateCourseGrades> UpdateCourseGrades { get; set; }
+
+        public System.Data.Entity.DbSet<Collage_Moodle.Models.ManageExamSchedule> ManageExamSchedules { get; set; }
     }
 }

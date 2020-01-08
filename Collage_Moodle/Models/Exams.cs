@@ -14,9 +14,9 @@ namespace Collage_Moodle.Models
         [StringLength(50, ErrorMessage = "Course name should be no more than 50 characters.")]
         public string Courses_cName { get; set; }
         [Required]
-        public char moed { get; set; }
+        public string moed { get; set; }
         [Required]
-        public DateTime date { get; set; }
+        public string date { get; set; }
         [Required]
         [StringLength(50, ErrorMessage = "Classroom should be no more than 50 characters.")]
         public string classroom { get; set; }
