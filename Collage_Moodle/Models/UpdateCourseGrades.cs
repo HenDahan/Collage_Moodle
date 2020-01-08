@@ -7,7 +7,7 @@ using System.Web;
 
 namespace Collage_Moodle.Models
 {
-    public class AssignStudent
+    public class UpdateCourseGrades
     {
         [Key, Column(Order = 0)]
         [Required(ErrorMessage = "Course name cannot be empty.")]
@@ -19,8 +19,8 @@ namespace Collage_Moodle.Models
         [Range(100000, 999999999, ErrorMessage = "Student ID must be a number between 6 to 9 digits.")]
         public int studentID { get; set; }
 
-
-        
-
+        [Required(ErrorMessage = "Grade cannot be empty.")]
+        [Range(0, 100, ErrorMessage = "The grade must be between 0 - 100.")]
+        public int grade { get; set; }
     }
 }

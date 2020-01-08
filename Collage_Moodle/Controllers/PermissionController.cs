@@ -13,7 +13,7 @@ namespace Collage_Moodle.Controllers
         public ActionResult CheckPermission(Users user)
         {
             if (user == null)
-                return RedirectToAction("Index", "Login");
+                return RedirectToAction("Login", "Login");
 
             else if (user.permission == 0)
                 return RedirectToAction("Index", "Student");

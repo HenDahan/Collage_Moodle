@@ -7,14 +7,15 @@ using System.Web.Mvc;
 
 namespace Collage_Moodle.Models
 {
-    public class LogIn
+    public class Login
     {
-        [Required]
-        [StringLength(50, MinimumLength = 2, ErrorMessage = "Error 1  Name in to short.")]
+        [Key]
+        [Required(ErrorMessage = "User name cannot be empty")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "User name must be at least 2 characters")]
         public string UserName { get; set; }
 
-        [Required]
-        [StringLength(50, MinimumLength = 6, ErrorMessage = "Error 2 Password is mast to be at list 6 digits.")]
+        [Required(ErrorMessage ="Password cannot be empty")]
+        [StringLength(50, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters")]
         public string Password { get; set; }
 
     }

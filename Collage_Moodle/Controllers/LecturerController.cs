@@ -21,7 +21,7 @@ namespace Collage_Moodle.Controllers
                 return View("LecturerMainPage");
         }
 
-        public ActionResult View_schedule()
+        public ActionResult ViewSchedule()
         {
             Users user = (Users)Session["user"];
             if (user == null)
@@ -29,10 +29,10 @@ namespace Collage_Moodle.Controllers
             else if (user.permission != 1)
                 return perm.CheckPermission(user);
             else
-                return View("View_schedule");
+                return View("ViewSchedule");
         }
 
-        public ActionResult view_student_list_of_a_course()
+        public ActionResult ViewStudentListOfaCourse()
         {
             Users user = (Users)Session["user"];
             if (user == null)
@@ -40,10 +40,10 @@ namespace Collage_Moodle.Controllers
             else if (user.permission != 1)
                 return perm.CheckPermission(user);
             else
-                return View("view_student_list_of_a_course");
+                return View("ViewStudentListOfaCourse");
         }
 
-        public ActionResult View_exam_grades()
+        public ActionResult ViewExamGrades()
         {
             Users user = (Users)Session["user"];
             if (user == null)
@@ -51,10 +51,10 @@ namespace Collage_Moodle.Controllers
             else if (user.permission != 1)
                 return perm.CheckPermission(user);
             else
-                return View("View_exam_grades");
+                return View("ViewExamGrades");
         }
 
-        public ActionResult Update_course_grades()
+        public ActionResult UpdateCourseGrades()
         {
             Users user = (Users)Session["user"];
             if (user == null)
@@ -62,7 +62,7 @@ namespace Collage_Moodle.Controllers
             else if (user.permission != 1)
                 return perm.CheckPermission(user);
             else
-                return View("Update_course_grades");
+                return View("UpdateCourseGrades");
         }
 
         public ActionResult Exit()

@@ -21,10 +21,12 @@ namespace Collage_Moodle.Controllers
             else if (user.permission != 2)
                 return perm.CheckPermission(user);
             else
+            {
                 return View("FacultyAdministratorMainPage");
+            }
         }
 
-        public ActionResult Assign_students()
+        public ActionResult AssignStudents()
         {
             Users user = (Users)Session["user"];
             if (user == null)
@@ -41,7 +43,7 @@ namespace Collage_Moodle.Controllers
 
 
         [HttpPost]
-        public ActionResult Assign_students(AssignStudent assignS)
+        public ActionResult AssignStudents(AssignStudent assignS)
         {
             Users user = (Users)Session["user"];
             if (user == null)
@@ -50,23 +52,27 @@ namespace Collage_Moodle.Controllers
                 return perm.CheckPermission(user);
             else
             {
-                if (ModelState.IsValid)
+
+                int userID = assignS.studentID;
+                string courseName = assignS.courseName.ToString();
+                dal.Students.Add(new Students { Courses_cName = courseName, Users_userID = userID });
+                try
                 {
-                    int userID = assignS.studentID;
-                    string courseName = assignS.courseName.ToString();
-                    dal.Students.Add(new Students { Courses_cName = courseName, Users_userID = userID });
                     dal.SaveChanges();
+                }
+                catch
+                {
+                    TempData["Message"] = "Assigned succesfully";
                     return perm.CheckPermission(user);
 
-
-                    //return ViewCourseInfo(courseName);
-                    //return perm.CheckPermission(user);
                 }
-                return View();
+                TempData["Message"] = "Assigned succesfully";
+                return perm.CheckPermission(user);
 
             }
 
         }
+
         /*
         public JsonResult ViewCourseInfo(string courseName)
         {
@@ -97,7 +103,7 @@ namespace Collage_Moodle.Controllers
                 return View("Manage_exam_schedule");
         }
 
-        public ActionResult Update_course_grades()
+        public ActionResult UpdateCourseGrades()
         {
             Users user = (Users)Session["user"];
             if (user == null)
@@ -105,10 +111,45 @@ namespace Collage_Moodle.Controllers
             else if (user.permission != 2)
                 return perm.CheckPermission(user);
             else
-                return View("Update_course_grades");
+            {
+                UpdateCourseGrades update_grade = new UpdateCourseGrades();
+                return View(update_grade);
+            }
         }
 
+        [HttpPost]
+        public ActionResult UpdateCourseGrades(UpdateCourseGrades update_grade)
+        {
+            Users user = (Users)Session["user"];
+            if (user == null)
+                return RedirectToAction("Index", "Login");
+            else if (user.permission != 2)
+                return perm.CheckPermission(user);
+            else
+            {
 
+                int userID = update_grade.studentID;
+                int new_grade = update_grade.grade;
+                string courseName = update_grade.courseName.ToString();
+                List<Students> list = (from x in dal.Students
+                                        where (x.Users_userID.Equals(userID) && x.Courses_cName.Equals(courseName))
+                                        select x).ToList<Students>();
+                if (list.Count > 0)
+                {
+                    Students dbstudent = dal.Students.Single<Students>(x => x.Courses_cName == courseName && x.Users_userID == userID);
+                    dbstudent.grade = new_grade;
+                    dal.SaveChanges();
+                    TempData["Message"] = "Grade Updated succesfully";
+                    return perm.CheckPermission(user);
+                }
+                else
+                {
+                    TempData["Message"] = "There is no such user ID studing that course.";
+                    return perm.CheckPermission(user);
+                }
+            }
+
+        }
 
         public ActionResult Exit()
         {

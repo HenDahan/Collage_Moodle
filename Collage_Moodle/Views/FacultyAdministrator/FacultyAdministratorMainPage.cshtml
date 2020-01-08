@@ -1,34 +1,54 @@
-﻿
+﻿@model Collage_Moodle.Models.AssignStudent
+
 @{
-    Layout = null;
+    ViewBag.Title = "";
 }
 
-<!DOCTYPE html>
+<h2>Faculty Administrator Main Page</h2>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Faculty Administrator Main Page</title>
-</head>
+@if (TempData["Message"] != null)
+{
+    <script type="text/javascript">
+        window.onload = function() {
+            alert("@(TempData["Message"] as string)");
+        };
+        
+    </script>
+    TempData["Message"] = null;
+}
+
 <body>
-    <div>
-        <input id="assing_student" type="submit" value="Assing Student" 
-            onclick="location.href='@Url.Action("Assign_students", "FacultyAdministrator")'"/>
-        <br />
-        <input id="Manage_course_schedule" type="submit" value="Manage Course Schedule"
-               onclick="location.href='@Url.Action("Manage_course_schedule", "FacultyAdministrator")'"/>
-        <br />
-        <input id="Manage_exam_schedule" type="submit" value="Manage Exam Schedule" 
-               onclick="location.href='@Url.Action("Manage_exam_schedule", "FacultyAdministrator")'"/>
-        <br />
-        <input id="update_course_grades" type="submit" value="Update Course Grades" 
-               onclick="location.href='@Url.Action("Update_course_grades", "FacultyAdministrator")'"/>
-        <br />
-        <input id="exit" type="submit" value="Exit"
-               onclick="location.href='@Url.Action("Exit", "FacultyAdministrator")'"/>
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-
-
+        <div class="form-group">
+            <div class="col-md-10 margin-top-10">
+                <input type="submit" value="Assing Student" class="btn btn-default"
+                       onclick="location.href='@Url.Action("AssignStudents", "FacultyAdministrator")'" />
+            </div>
+            <div class="col-md-10 margin-top-10">
+                <input type="submit" value="Manage Course Schedule" class="btn btn-default"
+                       onclick="location.href='@Url.Action("Manage_course_schedule", "FacultyAdministrator")'" />
+            </div>
+            <div class="col-md-10 margin-top-10">
+                <input type="submit" value="Manage Exam Schedule" class="btn btn-default"
+                       onclick="location.href='@Url.Action("Manage_exam_schedule", "FacultyAdministrator")'" />
+            </div>
+            <div class="col-md-10 margin-top-10 ">
+                <input type="submit" value="Update Course Grades" class="btn btn-default"
+                       onclick="location.href='@Url.Action("UpdateCourseGrades", "FacultyAdministrator")'" />
+            </div>
+            <div class="col-md-10 margin-top-50">
+                <input type="submit" value="Exit" class="btn btn-default"
+                       onclick="location.href='@Url.Action("Exit", "FacultyAdministrator")'" />
+            </div>
+        </div>
     </div>
 </body>
-</html>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

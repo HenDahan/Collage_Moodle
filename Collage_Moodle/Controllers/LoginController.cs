@@ -14,38 +14,42 @@ namespace Collage_Moodle.Controllers
         public ActionResult Index()
         {
             if (Session["user"] == null)
-                return View("LoginView");
+            {
+                Login user = new Login();
+                return View("Login");
+            }
             else
                 return perm.CheckPermission((Users)Session["user"]);
         }
 
         [HttpPost]
-        public ActionResult Submit()
+        public ActionResult Index(Login user)
         {
 
             DAL dal = new DAL();
 
-            string userName = Request.Form["usernameInput"].ToString();
-            string password = Request.Form["passwordInput"].ToString();
-            var dbUser = dal.Users.Single<Users>(x => x.userName == userName && x.password == password);
-            if (dbUser != null)
-            /*
-            List<Users> usersList =
-                (from x in dal.Users
-                 where (x.userName.Equals(userName) & x.password.Equals(password))
-                 select x).ToList<Users>();
+            string userName = user.UserName;
+            string password = user.Password;
 
-            TempData["loggedUser"] = usersList[0].userName;
-
-            if (usersList.Count > 0)
-              */
+            List<Users> list = (from x in dal.Users
+                                where (x.userName.Equals(userName) && x.password.Equals(password))
+                                   select x).ToList<Users>();
+            if (list.Count > 0)
             {
-                Session["user"] = new Users { userID = dbUser.userID , userName = userName, password = password, permission = dbUser.permission};
+
+
+
+                var dbUser = dal.Users.Single<Users>(x => x.userName == userName && x.password == password);
+
+                Session["user"] = new Users { userID = dbUser.userID, userName = userName, password = password, permission = dbUser.permission };
                 return perm.CheckPermission((Users)Session["user"]);
+
             }
             else
-                return View("LoginView");
-
+            {
+                TempData["Message"] = "User name or password are incorrect.";
+                return View("Login");
+            }
 
         }
 

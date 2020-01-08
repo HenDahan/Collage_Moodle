@@ -13,6 +13,7 @@ namespace Collage_Moodle.Models
         [Required]
         [StringLength(50, ErrorMessage = "Course name should be no more than 50 characters.")]
         public string Courses_cName { get; set; }
+
         [Key, Column(Order = 1)]
         [Required]
         [Range(000001, 999999999, ErrorMessage ="Please enter an ID between 6 to 9 digits.")]

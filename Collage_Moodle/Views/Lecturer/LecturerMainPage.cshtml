@@ -1,31 +1,54 @@
-﻿@{
-    Layout = null;
+﻿@model Collage_Moodle.Models.AssignStudent
+
+@{
+    ViewBag.Title = "";
 }
 
-<!DOCTYPE html>
+<h2>Lecturer Main Page</h2>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Lecturer Main Page</title>
-</head>
+@if (TempData["Message"] != null)
+{
+    <script type="text/javascript">
+        window.onload = function() {
+            alert("@(TempData["Message"] as string)");
+        };
+
+    </script>
+    TempData["Message"] = null;
+}
+
 <body>
-    <div>
-        <input id="View_schedule" type="submit" value="View Schedule"
-               onclick="location.href='@Url.Action("View_schedule", "Lecturer")'" />
-        <br />
-        <input id="view_student_list_of_a_course" type="submit" value="View Student List of a course"
-               onclick="location.href='@Url.Action("view_student_list_of_a_course", "Lecturer")'" />
-        <br />
-        <input id="View_exam_grades" type="submit" value="View Exam Grades"
-               onclick="location.href='@Url.Action("View_exam_grades", "Lecturer")'" />
-        <br />
-        <input id="Update_course_grades" type="submit" value="Update Course Grades"
-               onclick="location.href='@Url.Action("Update_course_grades", "Lecturer")'" />
-        <br />
-        <input id="exit" type="submit" value="Exit"
-               onclick="location.href='@Url.Action("Exit", "Lecturer")'" />
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
+        <div class="form-group">
+            <div class="col-md-10 margin-top-10">
+                <input type="submit" value="Assing Student" class="btn btn-default"
+                       onclick="location.href='@Url.Action("ViewSchedule", "Lecturer")'" />
+            </div>
+            <div class="col-md-10 margin-top-10">
+                <input type="submit" value="Manage Course Schedule" class="btn btn-default"
+                       onclick="location.href='@Url.Action("ViewStudentListOfaCourse", "Lecturer")'" />
+            </div>
+            <div class="col-md-10 margin-top-10">
+                <input type="submit" value="Manage Exam Schedule" class="btn btn-default"
+                       onclick="location.href='@Url.Action("ViewExamGrades", "Lecturer")'" />
+            </div>
+            <div class="col-md-10 margin-top-10 ">
+                <input type="submit" value="Update Course Grades" class="btn btn-default"
+                       onclick="location.href='@Url.Action("UpdateCourseGrades", "Lecturer")'" />
+            </div>
+            <div class="col-md-10 margin-top-50">
+                <input type="submit" value="Exit" class="btn btn-default"
+                       onclick="location.href='@Url.Action("Exit", "FacultyAdministrator")'" />
+            </div>
+        </div>
     </div>
 </body>
-</html>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
