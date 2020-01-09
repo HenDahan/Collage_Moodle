@@ -138,6 +138,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AssignStudent.cs" />
+    <Compile Include="Models\CourseModel.cs" />
     <Compile Include="Models\Courses.cs" />
     <Compile Include="Models\Exams.cs" />
     <Compile Include="Models\Login.cs" />
@@ -146,6 +147,7 @@
     <Compile Include="Models\Students.cs" />
     <Compile Include="Models\UpdateCourseGrades.cs" />
     <Compile Include="Models\Users.cs" />
+    <Compile Include="Models\ViewSchedule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -185,16 +187,14 @@
     <Content Include="Views\Student\StudentMainPage.cshtml" />
     <Content Include="Views\Lecturer\LecturerMainPage.cshtml" />
     <Content Include="Views\FacultyAdministrator\FacultyAdministratorMainPage.cshtml" />
-    <Content Include="Views\Lecturer\ViewSchedule.cshtml" />
     <Content Include="Views\Lecturer\ViewStudentListOfaCourse.cshtml" />
     <Content Include="Views\Lecturer\ViewExamGrades.cshtml" />
-    <Content Include="Views\Student\View_schedule.cshtml" />
-    <Content Include="Views\Student\View_exam_schedule.cshtml" />
     <Content Include="Views\FacultyAdministrator\AssignStudents.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />
     <Content Include="Views\Shared\UpdateCourseGrades.cshtml" />
     <Content Include="Views\FacultyAdministrator\ManageCourseSchedule.cshtml" />
     <Content Include="Views\FacultyAdministrator\ManageExamSchedule.cshtml" />
+    <Content Include="Views\Student\ViewSchedule.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

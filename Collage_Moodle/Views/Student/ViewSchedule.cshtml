@@ -1,0 +1,31 @@
+﻿@model Collage_Moodle.Models.ViewSchedule
+    @using Collage_Moodle.Models
+
+@{
+    ViewBag.Title = null;
+}
+<div><b>Your Schedule!</b><br /></div>
+<div>
+
+</div>
+<table class="table table-bordered table-responsive table-hover">
+    <tr>
+        <th>Course Name</th>
+        <th>Day</th>
+        <th>Hour</th>
+        <th>Classroom</th>
+        <th>Lecturer ID</th>
+    </tr>
+
+    @foreach (var c in Model.courses)
+    {
+        <tr>
+            <td>@c.courseName</td>
+            <td>@c.day</td>
+            <td>@c.hour</td>
+            <td>@c.classroom</td>
+            <td>@c.lecturerID</td>
+        </tr>
+        }
+
+</table>
