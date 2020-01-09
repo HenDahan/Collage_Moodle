@@ -105,23 +105,72 @@ namespace Collage_Moodle.Controllers
                 return perm.CheckPermission(user);
             else
             {
-                string courseName = update_grade.courseName;
-                int userID = update_grade.studentID;
+                string course_name = update_grade.courseName;
+                int student_id = update_grade.studentID;
                 int new_grade = update_grade.grade;
-                List<Students> dbStudent = (from x in dal.Students
-                                            where (x.Users_userID.Equals(userID) && x.Courses_cName.Equals(courseName))
-                                            select x).ToList<Students>();
-                if (dbStudent.Count > 0)
+                List<Exams> dbExam = (from x in dal.Exams
+                                      where (x.Courses_cName.Equals(course_name))
+                                            select x).ToList<Exams>();
+                if (dbExam.Count > 0)
                 {
-                    Students tempStudent = dal.Students.Single<Students>(x => x.Courses_cName == courseName && x.Users_userID == userID);
-                    tempStudent.grade = new_grade;
-                    dal.SaveChanges();
-                    TempData["Message"] = "Grade Updated successfully";
-                    return perm.CheckPermission(user);
+                    //changes that moed A will always be first.
+                    if (dbExam[0].moed.Equals('B'))
+                    {
+                        dbExam.Add(dbExam[0]);
+                        dbExam.RemoveAt(0);
+                    }
+
+                    //if moed B date passed already.
+                    if (checkDates(DateTime.Now, dbExam[1].date, dbExam[1].hour))
+                    {
+                        List<Students> dbStudent = (from x in dal.Students
+                                                    where (x.Users_userID.Equals(student_id) && x.Courses_cName.Equals(course_name))
+                                                    select x).ToList<Students>();
+                        if (dbStudent.Count > 0)
+                        {
+                            Students tempStudent = dal.Students.Single<Students>(x => x.Courses_cName == course_name && x.Users_userID == student_id);
+                            tempStudent.grade = new_grade;
+                            dal.SaveChanges();
+                            TempData["Message"] = "Moed B grade Updated successfully";
+                            return perm.CheckPermission(user);
+                        }
+                        else
+                        {
+                            TempData["Message"] = "There is no such user ID studing that course.";
+                            return perm.CheckPermission(user);
+                        }
+                    }
+                    //if moed B didn't pass but moed A passed.
+                    else if (checkDates(DateTime.Now, dbExam[0].date, dbExam[0].hour))
+                    {
+                        List<Students> dbStudent = (from x in dal.Students
+                                                    where (x.Users_userID.Equals(student_id) && x.Courses_cName.Equals(course_name))
+                                                    select x).ToList<Students>();
+                        if (dbStudent.Count > 0)
+                        {
+                            Students tempStudent = dal.Students.Single<Students>(x => x.Courses_cName == course_name && x.Users_userID == student_id);
+                            tempStudent.grade = new_grade;
+                            dal.SaveChanges();
+                            TempData["Message"] = "Moed A grade Updated successfully";
+                            return perm.CheckPermission(user);
+                        }
+                        else
+                        {
+                            TempData["Message"] = "There is no such user ID studing that course.";
+                            return perm.CheckPermission(user);
+                        }
+                    }
+                    //if none of the moeds started yet.
+                    else
+                    {
+                        TempData["Message"] = "You cannot update a grade for this exam yet.(wait for the moed date to pass)";
+                        return perm.CheckPermission(user);
+                    }
+
                 }
                 else
                 {
-                    TempData["Message"] = "There is no such user ID studing that course.";
+                    TempData["Message"] = "There is no exam for that course name.";
                     return perm.CheckPermission(user);
                 }
             }
@@ -152,8 +201,9 @@ namespace Collage_Moodle.Controllers
             {
                 string courseName = update_exam.course_name;
                 string moed = update_exam.moed;
-                string new_date = update_exam.new_date;
-                string new_classroom = update_exam.new_classroom;
+                string new_date = update_exam.date;
+                string new_hour = update_exam.hour;
+                string new_classroom = update_exam.classroom;
                 List<Exams> dbExam = (from x in dal.Exams
                                     where (x.Courses_cName.Equals(courseName) && x.moed.Equals(moed))
                                        select x).ToList<Exams>();
@@ -161,6 +211,7 @@ namespace Collage_Moodle.Controllers
                 {
                     Exams tempExam = dal.Exams.Single<Exams>(x => x.Courses_cName == courseName && x.moed == moed);
                     tempExam.date = new_date;
+                    tempExam.hour = new_hour;
                     tempExam.classroom = new_classroom;
 
                     dal.SaveChanges();
@@ -169,7 +220,7 @@ namespace Collage_Moodle.Controllers
                 }
                 else
                 {
-                    dal.Exams.Add(new Exams { Courses_cName = courseName, moed = moed, date = new_date, classroom = new_classroom });
+                    dal.Exams.Add(new Exams { Courses_cName = courseName, moed = moed, date = new_date, hour = new_hour, classroom = new_classroom });
                     dal.SaveChanges();
                     TempData["Message"] = "The exam datae and class CREATED successfully.";
                     return perm.CheckPermission(user);
@@ -256,14 +307,15 @@ namespace Collage_Moodle.Controllers
 
             float[] l_hour = new float[2];
             float[] c_hour = new float[2];
+            
             l_hour[0] = float.Parse(hour.Substring(0, 5).Replace(':', '.'));
-            l_hour[1] = float.Parse(hour.Substring(9, 5).Replace(':', '.'));
+            l_hour[1] = float.Parse(hour.Substring(6, 5).Replace(':', '.'));
             foreach (Courses course in dbCourses)
             {
                 if (course.day == day)
                 {
                     c_hour[0] = float.Parse(course.hour.Substring(0, 5).Replace(':', '.'));
-                    c_hour[1] = float.Parse(course.hour.Substring(9, 5).Replace(':', '.'));
+                    c_hour[1] = float.Parse(course.hour.Substring(6, 5).Replace(':', '.'));
 
                     if ((l_hour[0] > c_hour[0] && l_hour[0] < c_hour[1]) || (l_hour[1] > c_hour[0] && l_hour[1] < c_hour[1]) || (c_hour[0] > l_hour[0] && c_hour[0] < l_hour[1]))
                     {
@@ -289,15 +341,15 @@ namespace Collage_Moodle.Controllers
             string student_day = hisCourse[0].day;
             string student_hour = hisCourse[0].hour;
             s_hour[0] = float.Parse(student_hour.Substring(0, 5).Replace(':', '.'));
-            s_hour[1] = float.Parse(student_hour.Substring(9, 5).Replace(':', '.'));
+            s_hour[1] = float.Parse(student_hour.Substring(6, 5).Replace(':', '.'));
             foreach (Courses course in dbCourses)
             {
                 if (course.day == student_day)
                 {
                     c_hour[0] = float.Parse(course.hour.Substring(0, 5).Replace(':', '.'));
-                    c_hour[1] = float.Parse(course.hour.Substring(9, 5).Replace(':', '.'));
+                    c_hour[1] = float.Parse(course.hour.Substring(6, 5).Replace(':', '.'));
 
-                    if ((s_hour[0] > c_hour[0] && s_hour[0] < c_hour[1]) || (s_hour[1] > c_hour[0] && s_hour[1] < c_hour[1]) || (c_hour[0] > s_hour[0] && c_hour[0] < s_hour[1]))
+                    if ((s_hour[0] >= c_hour[0] && s_hour[0] < c_hour[1]) || (s_hour[1] > c_hour[0] && s_hour[1] <= c_hour[1]) || (c_hour[0] >= s_hour[0] && c_hour[0] < s_hour[1]))
                     {
                         return false;
                     }
@@ -305,6 +357,16 @@ namespace Collage_Moodle.Controllers
             }
             return true;
         }
+
+        public bool checkDates(DateTime now, string date, string hour)
+        {
+            string newcheck = date + " " + hour;
+            DateTime check = DateTime.Parse(newcheck);
+            if (now <= check)
+                return true;
+            return false;
+        }
+
 
         public ActionResult Exit()
         {

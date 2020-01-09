@@ -21,11 +21,15 @@ namespace Collage_Moodle.Models
         public string moed { get; set; }
 
         [Required(ErrorMessage = "The date cannot be empty.")]
-        [StringLength(50, ErrorMessage = "the date should be no more than 50 characters.")]
-        public string new_date { get; set; }
+        [RegularExpression("([0-2][0-9]|3[01])/[01][0-9]/20[0-9][0-9]$", ErrorMessage = "The date should be VALID for example: '12/03/2020'.")]
+        public string date { get; set; }
+
+        [Required(ErrorMessage = "The hour cannot be empty.")]
+        [RegularExpression("([0-1][0-9]|2[0-3]):[0-5][0-9]-([0-1][0-9]|2[0-3]):[0-5][0-9]$", ErrorMessage = "The hour should be VALID for exmple: '09:00-14:00'.")]
+        public string hour { get; set; }
 
         [Required(ErrorMessage = "The classroom cannot be empty.")]
         [StringLength(50, ErrorMessage = "the classroom should be no more than 50 characters.")]
-        public string new_classroom { get; set; }
+        public string classroom { get; set; }
     }
 }

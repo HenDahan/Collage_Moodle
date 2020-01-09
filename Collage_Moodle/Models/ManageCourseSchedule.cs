@@ -16,11 +16,11 @@ namespace Collage_Moodle.Models
         public string course_name { get; set; }
 
         [Required(ErrorMessage = "The day cannot be empty.")]
-        [StringLength(50, ErrorMessage = "the day shiuld be no more than 50 characters.")]
+        [RegularExpression("(Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday)$", ErrorMessage = "The day must be Sunday Monday, Tuesday, Wednesday, Thursday, Friday or Saturday.")]
         public string day { get; set; }
 
         [Required(ErrorMessage = "The hour cannot be empty.")]
-        [StringLength(50, ErrorMessage = "the hour should be no more than 50 characters.")]
+        [RegularExpression("([0-1][0-9]|2[0-3]):[0-5][0-9]-([0-1][0-9]|2[0-3]):[0-5][0-9]$", ErrorMessage = "The hour should be VALID for exmple: '09:00-14:00'.")]
         public string hour { get; set; }
 
         [Required(ErrorMessage = "The classroom cannot be empty.")]

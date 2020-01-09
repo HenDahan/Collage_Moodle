@@ -188,14 +188,13 @@
     <Content Include="Views\Lecturer\ViewSchedule.cshtml" />
     <Content Include="Views\Lecturer\ViewStudentListOfaCourse.cshtml" />
     <Content Include="Views\Lecturer\ViewExamGrades.cshtml" />
-    <Content Include="Views\Lecturer\UpdateCourseGrades.cshtml" />
     <Content Include="Views\Student\View_schedule.cshtml" />
     <Content Include="Views\Student\View_exam_schedule.cshtml" />
     <Content Include="Views\FacultyAdministrator\AssignStudents.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />
-    <Content Include="Views\FacultyAdministrator\UpdateCourseGrades.cshtml" />
-    <Content Include="Views\FacultyAdministrator\ManageExamSchedule.cshtml" />
+    <Content Include="Views\Shared\UpdateCourseGrades.cshtml" />
     <Content Include="Views\FacultyAdministrator\ManageCourseSchedule.cshtml" />
+    <Content Include="Views\FacultyAdministrator\ManageExamSchedule.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
