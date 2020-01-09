@@ -361,8 +361,9 @@ namespace Collage_Moodle.Controllers
         public bool checkDates(DateTime now, string date, string hour)
         {
             string newcheck = date + " " + hour;
+            newcheck = newcheck.Substring(0, 16);
             DateTime check = DateTime.Parse(newcheck);
-            if (now <= check)
+            if (now >= check)
                 return true;
             return false;
         }
