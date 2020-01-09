@@ -1,5 +1,5 @@
 ﻿@model Collage_Moodle.Models.ViewSchedule
-    @using Collage_Moodle.Models
+@using Collage_Moodle.Models
 
 @{
     ViewBag.Title = null;
@@ -17,15 +17,20 @@
         <th>Lecturer ID</th>
     </tr>
 
-    @foreach (var c in Model.courses)
+    @foreach (var course in Model.courses)
     {
         <tr>
-            <td>@c.courseName</td>
-            <td>@c.day</td>
-            <td>@c.hour</td>
-            <td>@c.classroom</td>
-            <td>@c.lecturerID</td>
+            <td>@course.courseName</td>
+            <td>@course.day</td>
+            <td>@course.hour</td>
+            <td>@course.classroom</td>
+            <td>@course.lecturerID</td>
         </tr>
-        }
+    }
 
 </table>
+
+<div class="col-md-offset-0 margin-top-50">
+    <input type="submit" value="Back" class="btn btn-default"
+           onclick="location.href='@Url.Action("Index", "Student")'" />
+</div>
