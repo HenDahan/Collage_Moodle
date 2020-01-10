@@ -53,30 +53,32 @@ namespace Collage_Moodle.Controllers
             {
                 string courseName = assignS.course_name.ToString();
                 int studentID = assignS.student_ID;
-                if (check_student(studentID, courseName))
+
+                List<Students> dbstudent = (from x in dal.Students
+                                             where (x.Users_userID.Equals(studentID) && x.Courses_cName.Equals(courseName))
+                                             select x).ToList<Students>();
+
+                if (dbstudent.Count == 0)
                 {
-
-
-                    dal.Students.Add(new Students { Courses_cName = courseName, Users_userID = studentID });
-                    try
+                    if (check_student_hours(studentID, courseName))
                     {
+                        dal.Students.Add(new Students { Courses_cName = courseName, Users_userID = studentID });
                         dal.SaveChanges();
-                    }
-                    catch
-                    {
-                        TempData["Message"] = "Assigned Failed, The student in this course already exists.";
-                        return perm.CheckPermission(user);
 
+                        TempData["Message"] = "Assigned successfully";
+                        return perm.CheckPermission(user);
                     }
-                    TempData["Message"] = "Assigned successfully";
-                    return perm.CheckPermission(user);
+                    else
+                    {
+                        TempData["Message"] = "Failed - The student cannot study two courses at the same time!";
+                        return View(assignS);
+                    }
                 }
                 else
                 {
-                    TempData["Message"] = "Failed - The student cannot study two courses at the same time!";
-                    return perm.CheckPermission(user);
+                    TempData["Message"] = "Assigned Failed, The student is in this course already exists.";
+                    return View(assignS);
                 }
-
             }
 
         }
@@ -105,8 +107,8 @@ namespace Collage_Moodle.Controllers
                 return perm.CheckPermission(user);
             else
             {
-                string course_name = update_grade.courseName;
-                int student_id = update_grade.studentID;
+                string course_name = update_grade.course_name;
+                int student_id = update_grade.student_ID;
                 int new_grade = update_grade.grade;
                 List<Exams> dbExam = (from x in dal.Exams
                                       where (x.Courses_cName.Equals(course_name))
@@ -326,7 +328,7 @@ namespace Collage_Moodle.Controllers
                 return true;
         }
 
-        private bool check_student(int id, string courseName)
+        private bool check_student_hours(int id, string courseName)
         {
 
             List<Courses> dbCourses = (from x in dal.Courses

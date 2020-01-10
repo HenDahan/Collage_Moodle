@@ -18,8 +18,6 @@ namespace Collage_Moodle.Models
         public string classroom { get; set; }
 
         public int lecturerID { get; set; }
-
-        //public List<Students> students { get; set; }
         
     }
 }

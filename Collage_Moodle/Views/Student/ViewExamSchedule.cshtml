@@ -1,0 +1,40 @@
+﻿@model Collage_Moodle.Models.ViewExamSchedule
+@using Collage_Moodle.Models
+
+@{
+    ViewBag.Title = null;
+    Users thisUser = (Users)Session["user"];
+}
+
+<h3>Exam Schedule for student: @thisUser.userName</h3>
+
+<div>
+
+</div>
+<table class="table table-bordered table-responsive table-hover">
+    <tr>
+        <th>Course Name</th>
+        <th>Moed</th>
+        <th>Date</th>
+        <th>Hours</th>
+        <th>Classroom</th>
+    </tr>
+
+    @foreach (var exam in Model.exams)
+    {
+        <tr>
+            <td>@exam.Courses_cName</td>
+            <td>@exam.moed</td>
+            <td>@exam.date</td>
+            <td>@exam.hour</td>
+            <td>@exam.classroom</td>
+
+        </tr>
+    }
+
+</table>
+
+<div class="col-md-offset-0 margin-top-10">
+    <input type="submit" value="Back" class="btn btn-default"
+           onclick="location.href='@Url.Action("Index")'" />
+</div>

@@ -35,5 +35,11 @@ namespace Collage_Moodle.Dal
         public System.Data.Entity.DbSet<Collage_Moodle.Models.ManageCourseSchedule> ManageCourseSchedules { get; set; }
 
         public System.Data.Entity.DbSet<Collage_Moodle.Models.ViewSchedule> ViewSchedules { get; set; }
+
+        public System.Data.Entity.DbSet<Collage_Moodle.Models.ViewExamSchedule> ViewExamSchedules { get; set; }
+
+        public System.Data.Entity.DbSet<Collage_Moodle.Models.GetCourse> GetCourses { get; set; }
+
+        public System.Data.Entity.DbSet<Collage_Moodle.Models.ViewExamGrades> ViewExamGrades { get; set; }
     }
 }

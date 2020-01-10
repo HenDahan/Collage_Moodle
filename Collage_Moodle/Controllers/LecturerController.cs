@@ -32,10 +32,31 @@ namespace Collage_Moodle.Controllers
             else if (user.permission != 1)
                 return perm.CheckPermission(user);
             else
-                return View("ViewSchedule");
+            {
+                List<Courses> dbCourses = (from course in dal.Courses
+                                           where course.Users_lecturerID.Equals(user.userID)
+                                           select course).ToList<Courses>();
+                if (dbCourses.Count > 0)
+                {
+                    List<CourseModel> showCourses = new List<CourseModel>();
+                    foreach (Courses c in dbCourses)
+                        showCourses.Add(new CourseModel { courseName = c.courseName, day = c.day, hour = c.hour, classroom = c.classroom });
+
+                    ViewSchedule lecturerView = new ViewSchedule();
+                    lecturerView.user = user;
+                    lecturerView.courses = showCourses;
+                    return View(lecturerView);
+                }
+                else
+                {
+                    TempData["Message"] = "You do not have any schedule yet.";
+                    return perm.CheckPermission(user);
+                }
+            }
         }
 
-        public ActionResult ViewStudentListOfaCourse()
+        //checking list of students.
+        public ActionResult GetCourse()
         {
             Users user = (Users)Session["user"];
             if (user == null)
@@ -43,9 +64,48 @@ namespace Collage_Moodle.Controllers
             else if (user.permission != 1)
                 return perm.CheckPermission(user);
             else
-                return View("ViewStudentListOfaCourse");
+            {
+                GetCourse courseN = new GetCourse();
+                return View(courseN);
+            }
         }
 
+        [HttpPost]
+        public ActionResult GetCourse(GetCourse courseN)
+        {
+            Users user = (Users)Session["user"];
+            if (user == null)
+                return RedirectToAction("Index", "Login");
+            else if (user.permission != 1)
+                return perm.CheckPermission(user);
+            else
+            {
+                TempData["post"] = "1";
+                TempData["course"] = courseN.course_name;
+                List<Students> dbStudents = (from student in dal.Students
+                                             where student.Courses_cName.Equals(courseN.course_name)
+                                             select student).ToList<Students>();
+                if (dbStudents.Count > 0)
+                {
+                    List<StudentModel> showStudents = new List<StudentModel>();
+                    foreach (Students s in dbStudents)
+                        showStudents.Add(new StudentModel { Users_userID = s.Users_userID });
+
+                    GetCourse studentsView = new GetCourse();
+                    studentsView.user = user;
+                    studentsView.students = showStudents;
+                    return View(studentsView);
+                }
+                else
+                {
+                    TempData["Message"] = "There are no students studying this course.";
+                    return perm.CheckPermission(user);
+                }
+            }
+        }
+
+
+        //checking exam grades.
         public ActionResult ViewExamGrades()
         {
             Users user = (Users)Session["user"];
@@ -54,7 +114,44 @@ namespace Collage_Moodle.Controllers
             else if (user.permission != 1)
                 return perm.CheckPermission(user);
             else
-                return View("ViewExamGrades");
+            {
+                ViewExamGrades courseN = new ViewExamGrades();
+                return View(courseN);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ViewExamGrades(ViewExamGrades courseN)
+        {
+            Users user = (Users)Session["user"];
+            if (user == null)
+                return RedirectToAction("Index", "Login");
+            else if (user.permission != 1)
+                return perm.CheckPermission(user);
+            else
+            {
+                TempData["post"] = "1";
+                TempData["course"] = courseN.course_name;
+                List<Students> dbStudents = (from student in dal.Students
+                                             where student.Courses_cName.Equals(courseN.course_name)
+                                             select student).ToList<Students>();
+                if (dbStudents.Count > 0)
+                {
+                    List<StudentModel> showStudents = new List<StudentModel>();
+                    foreach (Students s in dbStudents)
+                        showStudents.Add(new StudentModel { Users_userID = s.Users_userID, grade = s.grade });
+
+                    ViewExamGrades gradesView = new ViewExamGrades();
+                    gradesView.user = user;
+                    gradesView.students = showStudents;
+                    return View(gradesView);
+                }
+                else
+                {
+                    TempData["Message"] = "There are no students studying this course.";
+                    return perm.CheckPermission(user);
+                }
+            }
         }
 
         public ActionResult UpdateCourseGrades()
@@ -81,8 +178,8 @@ namespace Collage_Moodle.Controllers
                 return perm.CheckPermission(user);
             else
             {
-                string course_name = update_grade.courseName;
-                int student_id = update_grade.studentID;
+                string course_name = update_grade.course_name;
+                int student_id = update_grade.student_ID;
                 int new_grade = update_grade.grade;
                 List<Exams> dbExam = (from x in dal.Exams
                                       where (x.Courses_cName.Equals(course_name))

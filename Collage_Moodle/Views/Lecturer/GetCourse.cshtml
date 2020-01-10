@@ -1,11 +1,12 @@
-﻿@model Collage_Moodle.Models.ViewExamGrades
+﻿@model Collage_Moodle.Models.GetCourse
 @using Collage_Moodle.Models
+
 @{
     ViewBag.Title = null;
     Users thisUser = (Users)Session["user"];
 }
 
-<h2>View Grades of a Course</h2>
+<h2>View Students of a Course</h2>
 
 
 @if (TempData["post"] == null)
@@ -16,7 +17,7 @@
         @Html.AntiForgeryToken()
 
         <div class="form-horizontal">
-            <h4>Enter the course name to view the grades list.</h4>
+            <h4>Enter the course name to view the students list.</h4>
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="form-group">
@@ -50,14 +51,12 @@ else
     <table class="table table-bordered table-responsive table-hover">
         <tr>
             <th>Student ID</th>
-            <th>Grade</th>
         </tr>
 
         @foreach (var student in Model.students)
         {
             <tr>
                 <td>@student.Users_userID</td>
-                <td>@student.grade</td>
             </tr>
         }
 
@@ -70,3 +69,4 @@ else
     <input type="submit" value="Back" class="btn btn-default"
            onclick="location.href='@Url.Action("Index")'" />
 </div>
+

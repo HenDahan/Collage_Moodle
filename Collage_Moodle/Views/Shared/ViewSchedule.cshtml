@@ -1,0 +1,73 @@
+﻿@model Collage_Moodle.Models.ViewSchedule
+@using Collage_Moodle.Models
+
+@{
+    ViewBag.Title = null;
+    Users thisUser = (Users)Session["user"];
+}
+
+@if (thisUser.permission == 0)
+{
+    <h3>Schedule for student: @thisUser.userName</h3>
+
+    <div>
+
+    </div>
+    <table class="table table-bordered table-responsive table-hover">
+        <tr>
+            <th>Course Name</th>
+            <th>Day</th>
+            <th>Hours</th>
+            <th>Classroom</th>
+            <th>Lecturer ID</th>
+        </tr>
+
+        @foreach (var course in Model.courses)
+        {
+            <tr>
+                <td>@course.courseName</td>
+                <td>@course.day</td>
+                <td>@course.hour</td>
+                <td>@course.classroom</td>
+                <td>@course.lecturerID</td>
+            </tr>
+        }
+
+    </table>
+}
+@if (thisUser.permission == 1)
+{
+    <h3>Schedule for Lecturer: @thisUser.userName</h3>
+
+    <div>
+
+    </div>
+    <table class="table table-bordered table-responsive table-hover">
+        <tr>
+            <th>Course Name</th>
+            <th>Day</th>
+            <th>Hours</th>
+            <th>Classroom</th>
+        </tr>
+
+        @foreach (var course in Model.courses)
+        {
+            <tr>
+                <td>@course.courseName</td>
+                <td>@course.day</td>
+                <td>@course.hour</td>
+                <td>@course.classroom</td>
+            </tr>
+        }
+
+    </table>
+}
+
+
+
+<div class="col-md-offset-0 margin-top-10">
+    <input type="submit" value="Back" class="btn btn-default"
+           onclick="location.href='@Url.Action("Index")'" />
+</div>
+
+
