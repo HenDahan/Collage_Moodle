@@ -5,6 +5,17 @@
     Users thisUser = (Users)Session["user"];
 }
 
+@if (TempData["Message"] != null)
+{
+    <script type="text/javascript">
+        window.onload = function() {
+            alert("@(TempData["Message"] as string)");
+        };
+
+    </script>
+    TempData["Message"] = null;
+}
+
 <h2>View Grades of a Course</h2>
 
 

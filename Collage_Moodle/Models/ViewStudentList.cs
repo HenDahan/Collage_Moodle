@@ -6,7 +6,7 @@ using System.Web;
 
 namespace Collage_Moodle.Models
 {
-    public class GetCourse
+    public class ViewStudentList
     {
         [Key]
         public int Id { get; set; }

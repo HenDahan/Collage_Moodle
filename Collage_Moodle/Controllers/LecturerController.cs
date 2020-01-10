@@ -56,7 +56,7 @@ namespace Collage_Moodle.Controllers
         }
 
         //checking list of students.
-        public ActionResult GetCourse()
+        public ActionResult ViewStudentList()
         {
             Users user = (Users)Session["user"];
             if (user == null)
@@ -65,13 +65,13 @@ namespace Collage_Moodle.Controllers
                 return perm.CheckPermission(user);
             else
             {
-                GetCourse courseN = new GetCourse();
+                ViewStudentList courseN = new ViewStudentList();
                 return View(courseN);
             }
         }
 
         [HttpPost]
-        public ActionResult GetCourse(GetCourse courseN)
+        public ActionResult ViewStudentList(ViewStudentList courseN)
         {
             Users user = (Users)Session["user"];
             if (user == null)
@@ -80,26 +80,34 @@ namespace Collage_Moodle.Controllers
                 return perm.CheckPermission(user);
             else
             {
-                TempData["post"] = "1";
-                TempData["course"] = courseN.course_name;
-                List<Students> dbStudents = (from student in dal.Students
-                                             where student.Courses_cName.Equals(courseN.course_name)
-                                             select student).ToList<Students>();
-                if (dbStudents.Count > 0)
+                if (if_his_course(user.userID, courseN.course_name))
                 {
-                    List<StudentModel> showStudents = new List<StudentModel>();
-                    foreach (Students s in dbStudents)
-                        showStudents.Add(new StudentModel { Users_userID = s.Users_userID });
+                    List<Students> dbStudents = (from student in dal.Students
+                                                 where student.Courses_cName.Equals(courseN.course_name)
+                                                 select student).ToList<Students>();
+                    if (dbStudents.Count > 0)
+                    {
+                        List<StudentModel> showStudents = new List<StudentModel>();
+                        foreach (Students s in dbStudents)
+                            showStudents.Add(new StudentModel { Users_userID = s.Users_userID });
 
-                    GetCourse studentsView = new GetCourse();
-                    studentsView.user = user;
-                    studentsView.students = showStudents;
-                    return View(studentsView);
+                        ViewStudentList studentsView = new ViewStudentList();
+                        studentsView.user = user;
+                        studentsView.students = showStudents;
+                        TempData["post"] = "1";
+                        TempData["course"] = courseN.course_name;
+                        return View(studentsView);
+                    }
+                    else
+                    {
+                        TempData["Message"] = "There are no students studying this course.";
+                        return perm.CheckPermission(user);
+                    }
                 }
                 else
                 {
-                    TempData["Message"] = "There are no students studying this course.";
-                    return perm.CheckPermission(user);
+                    TempData["Message"] = "This is not one of your courses.";
+                    return View();
                 }
             }
         }
@@ -130,27 +138,53 @@ namespace Collage_Moodle.Controllers
                 return perm.CheckPermission(user);
             else
             {
-                TempData["post"] = "1";
-                TempData["course"] = courseN.course_name;
-                List<Students> dbStudents = (from student in dal.Students
-                                             where student.Courses_cName.Equals(courseN.course_name)
-                                             select student).ToList<Students>();
-                if (dbStudents.Count > 0)
-                {
-                    List<StudentModel> showStudents = new List<StudentModel>();
-                    foreach (Students s in dbStudents)
-                        showStudents.Add(new StudentModel { Users_userID = s.Users_userID, grade = s.grade });
+                if (if_his_course(user.userID, courseN.course_name))
+                { 
+                    List<Students> dbStudents = (from student in dal.Students
+                                                 where student.Courses_cName.Equals(courseN.course_name)
+                                                 select student).ToList<Students>();
+                    if (dbStudents.Count > 0)
+                    {
+                        List<Exams> dbExam = (from x in dal.Exams
+                                              where (x.Courses_cName.Equals(courseN.course_name))
+                                              select x).ToList<Exams>();
+                        //I need to check for moed A and moed B
+                        //checkDates(DateTime.Now, dbExam[0].date, dbExam[0].hour)
+                        //take it from down below.
 
-                    ViewExamGrades gradesView = new ViewExamGrades();
-                    gradesView.user = user;
-                    gradesView.students = showStudents;
-                    return View(gradesView);
+                        if (true)
+                        {
+
+
+                            List<StudentModel> showStudents = new List<StudentModel>();
+                            foreach (Students s in dbStudents)
+                                showStudents.Add(new StudentModel { Users_userID = s.Users_userID, grade = s.grade });
+
+                            ViewExamGrades gradesView = new ViewExamGrades();
+                            gradesView.user = user;
+                            gradesView.students = showStudents;
+                            TempData["post"] = "1";
+                            TempData["course"] = courseN.course_name;
+                            return View(gradesView);
+                        }
+                        else
+                        {
+                            TempData["Message"] = "The moed date did not pass yet.";
+                            return View();
+                        }
+                    }
+                    else
+                    {
+                        TempData["Message"] = "There are no students studying this course.";
+                        return perm.CheckPermission(user);
+                    }
                 }
                 else
                 {
-                    TempData["Message"] = "There are no students studying this course.";
-                    return perm.CheckPermission(user);
+                    TempData["Message"] = "This is not one of your courses.";
+                    return View();
                 }
+
             }
         }
 
@@ -184,7 +218,7 @@ namespace Collage_Moodle.Controllers
                 List<Exams> dbExam = (from x in dal.Exams
                                       where (x.Courses_cName.Equals(course_name))
                                       select x).ToList<Exams>();
-                if (dbExam.Count > 0)
+                if (if_his_course(user.userID, course_name))
                 {
                     //changes that moed A will always be first.
                     if (dbExam[0].moed.Equals('B'))
@@ -210,7 +244,7 @@ namespace Collage_Moodle.Controllers
                         else
                         {
                             TempData["Message"] = "There is no such user ID studing that course.";
-                            return perm.CheckPermission(user);
+                            return View();
                         }
                     }
                     //if moed B didn't pass but moed A passed.
@@ -230,21 +264,21 @@ namespace Collage_Moodle.Controllers
                         else
                         {
                             TempData["Message"] = "There is no such user ID studing that course.";
-                            return perm.CheckPermission(user);
+                            return View();
                         }
                     }
                     //if none of the moeds started yet.
                     else
                     {
                         TempData["Message"] = "You cannot update a grade for this exam yet.(wait for the moed date to pass)";
-                        return perm.CheckPermission(user);
+                        return View();
                     }
 
                 }
                 else
                 {
-                    TempData["Message"] = "There is no exam for that course name.";
-                    return perm.CheckPermission(user);
+                    TempData["Message"] = "There is not one of your courses.";
+                    return View();
                 }
             }
 
@@ -255,6 +289,17 @@ namespace Collage_Moodle.Controllers
             newcheck = newcheck.Substring(0, 16);
             DateTime check = DateTime.Parse(newcheck);
             if (now >= check)
+                return true;
+            return false;
+        }
+
+
+        private bool if_his_course(int lecturerID, string courseName)
+        {
+            List<Courses> dbcourse = (from x in dal.Courses
+                                      where (x.courseName.Equals(courseName) && x.Users_lecturerID.Equals(lecturerID))
+                                        select x).ToList<Courses>();
+            if (dbcourse.Count > 0)
                 return true;
             return false;
         }

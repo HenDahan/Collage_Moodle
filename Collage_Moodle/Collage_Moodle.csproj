@@ -152,7 +152,7 @@
     <Compile Include="Models\ViewExamGrades.cs" />
     <Compile Include="Models\ViewExamSchedule.cs" />
     <Compile Include="Models\ViewSchedule.cs" />
-    <Compile Include="Models\GetCourse.cs" />
+    <Compile Include="Models\ViewStudentList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -199,7 +199,7 @@
     <Content Include="Views\FacultyAdministrator\ManageExamSchedule.cshtml" />
     <Content Include="Views\Shared\ViewSchedule.cshtml" />
     <Content Include="Views\Student\ViewExamSchedule.cshtml" />
-    <Content Include="Views\Lecturer\GetCourse.cshtml" />
+    <Content Include="Views\Lecturer\ViewStudentList.cshtml" />
     <Content Include="Views\Lecturer\ViewExamGrades.cshtml" />
   </ItemGroup>
   <ItemGroup>

@@ -71,13 +71,13 @@ namespace Collage_Moodle.Controllers
                     else
                     {
                         TempData["Message"] = "Failed - The student cannot study two courses at the same time!";
-                        return View(assignS);
+                        return View();
                     }
                 }
                 else
                 {
                     TempData["Message"] = "Assigned Failed, The student is in this course already exists.";
-                    return View(assignS);
+                    return View();
                 }
             }
 
@@ -139,7 +139,7 @@ namespace Collage_Moodle.Controllers
                         else
                         {
                             TempData["Message"] = "There is no such user ID studing that course.";
-                            return perm.CheckPermission(user);
+                            return View();
                         }
                     }
                     //if moed B didn't pass but moed A passed.
@@ -159,21 +159,21 @@ namespace Collage_Moodle.Controllers
                         else
                         {
                             TempData["Message"] = "There is no such user ID studing that course.";
-                            return perm.CheckPermission(user);
+                            return View();
                         }
                     }
                     //if none of the moeds started yet.
                     else
                     {
                         TempData["Message"] = "You cannot update a grade for this exam yet.(wait for the moed date to pass)";
-                        return perm.CheckPermission(user);
+                        return View();
                     }
 
                 }
                 else
                 {
                     TempData["Message"] = "There is no exam for that course name.";
-                    return perm.CheckPermission(user);
+                    return View();
                 }
             }
 
@@ -279,7 +279,7 @@ namespace Collage_Moodle.Controllers
                     else
                     {
                         TempData["Message"] = "Error - The lecturer cannot lecture another course at the same time!";
-                        return perm.CheckPermission(user);
+                        return View();
                     }
                 }
                 else
@@ -294,7 +294,7 @@ namespace Collage_Moodle.Controllers
                     else
                     {
                         TempData["Message"] = "Error - The lecturer cannot lecture another course at the same time!";
-                        return perm.CheckPermission(user);
+                        return View();
                     }
                 }
             }

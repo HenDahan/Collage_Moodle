@@ -1,9 +1,20 @@
-﻿@model Collage_Moodle.Models.GetCourse
+﻿@model Collage_Moodle.Models.ViewStudentList
 @using Collage_Moodle.Models
 
 @{
     ViewBag.Title = null;
     Users thisUser = (Users)Session["user"];
+}
+
+@if (TempData["Message"] != null)
+{
+    <script type="text/javascript">
+        window.onload = function() {
+            alert("@(TempData["Message"] as string)");
+        };
+
+    </script>
+    TempData["Message"] = null;
 }
 
 <h2>View Students of a Course</h2>
