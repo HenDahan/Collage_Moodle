@@ -152,10 +152,15 @@ namespace Collage_Moodle.Controllers
                         //checkDates(DateTime.Now, dbExam[0].date, dbExam[0].hour)
                         //take it from down below.
 
-                        if (true)
+                        //changes that moed A will always be first.
+                        if (dbExam[0].moed.Equals('B'))
                         {
-
-
+                            dbExam.Add(dbExam[0]);
+                            dbExam.RemoveAt(0);
+                        }
+                        //if Moed B date passed.
+                        if (checkDates(DateTime.Now, dbExam[1].date, dbExam[1].hour))
+                        {
                             List<StudentModel> showStudents = new List<StudentModel>();
                             foreach (Students s in dbStudents)
                                 showStudents.Add(new StudentModel { Users_userID = s.Users_userID, grade = s.grade });
@@ -165,11 +170,29 @@ namespace Collage_Moodle.Controllers
                             gradesView.students = showStudents;
                             TempData["post"] = "1";
                             TempData["course"] = courseN.course_name;
+                            TempData["moed"] = "B";
                             return View(gradesView);
                         }
+                        //if moed B didn't pass but moed A passed.
+                        else if (checkDates(DateTime.Now, dbExam[0].date, dbExam[0].hour))
+                        {
+                            List<StudentModel> showStudents = new List<StudentModel>();
+                            foreach (Students s in dbStudents)
+                                showStudents.Add(new StudentModel { Users_userID = s.Users_userID, grade = s.grade });
+
+                            ViewExamGrades gradesView = new ViewExamGrades();
+                            gradesView.user = user;
+                            gradesView.students = showStudents;
+                            TempData["post"] = "1";
+                            TempData["course"] = courseN.course_name;
+                            TempData["moed"] = "A";
+                            return View(gradesView);
+
+                        }
+                        //if none of the moeds started yet.
                         else
                         {
-                            TempData["Message"] = "The moed date did not pass yet.";
+                            TempData["Message"] = "You cannot view the exams because the exam date did not passed yet.";
                             return View();
                         }
                     }
@@ -227,7 +250,7 @@ namespace Collage_Moodle.Controllers
                         dbExam.RemoveAt(0);
                     }
 
-                    //if moed B date passed already.
+                    //if moed B date passed.
                     if (checkDates(DateTime.Now, dbExam[1].date, dbExam[1].hour))
                     {
                         List<Students> dbStudent = (from x in dal.Students

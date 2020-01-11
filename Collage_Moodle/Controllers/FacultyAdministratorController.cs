@@ -54,29 +54,43 @@ namespace Collage_Moodle.Controllers
                 string courseName = assignS.course_name.ToString();
                 int studentID = assignS.student_ID;
 
-                List<Students> dbstudent = (from x in dal.Students
-                                             where (x.Users_userID.Equals(studentID) && x.Courses_cName.Equals(courseName))
-                                             select x).ToList<Students>();
+                List<Courses> dbCourse = (from x in dal.Courses
+                                           where (x.courseName.Equals(courseName))
+                                            select x).ToList<Courses>();
 
-                if (dbstudent.Count == 0)
+                //checking if this course exist.
+                if (dbCourse.Count > 0)
                 {
-                    if (check_student_hours(studentID, courseName))
+                    List<Students> dbStudent = (from x in dal.Students
+                                                where (x.Users_userID.Equals(studentID) && x.Courses_cName.Equals(courseName))
+                                                select x).ToList<Students>();
+                    //checking if this student is not already studying this course.
+                    if (dbStudent.Count == 0)
                     {
-                        dal.Students.Add(new Students { Courses_cName = courseName, Users_userID = studentID });
-                        dal.SaveChanges();
+                        //checking if this course doesn't collide with another course time.
+                        if (check_student_hours(studentID, courseName))
+                        {
+                            dal.Students.Add(new Students { Courses_cName = courseName, Users_userID = studentID });
+                            dal.SaveChanges();
 
-                        TempData["Message"] = "Assigned successfully";
-                        return perm.CheckPermission(user);
+                            TempData["Message"] = "Assigned successfully";
+                            return perm.CheckPermission(user);
+                        }
+                        else
+                        {
+                            TempData["Message"] = "Failed - The student cannot study two courses at the same time!";
+                            return View();
+                        }
                     }
                     else
                     {
-                        TempData["Message"] = "Failed - The student cannot study two courses at the same time!";
+                        TempData["Message"] = "Assigned Failed, The student is in this course already exists.";
                         return View();
                     }
                 }
                 else
                 {
-                    TempData["Message"] = "Assigned Failed, The student is in this course already exists.";
+                    TempData["Message"] = "The course you tried to assign, does not exist.";
                     return View();
                 }
             }
@@ -264,7 +278,7 @@ namespace Collage_Moodle.Controllers
                                       select x).ToList<Courses>();
                 if (dbCourse.Count > 0)
                 {
-                    if (check_lecturer(lecturerID, day, hour, 1))
+                    if (check_lecturer(lecturerID, day, hour))
                     {
                         Courses tempCourse = dal.Courses.Single<Courses>(x => x.courseName == courseName);
                         tempCourse.day = day;
@@ -284,7 +298,7 @@ namespace Collage_Moodle.Controllers
                 }
                 else
                 {
-                    if (check_lecturer(lecturerID, day, hour, 1))
+                    if (check_lecturer(lecturerID, day, hour))
                     {
                         dal.Courses.Add(new Courses { courseName = courseName, day = day, hour = hour, classroom = classroom, Users_lecturerID = lecturerID });
                         dal.SaveChanges();
@@ -300,7 +314,7 @@ namespace Collage_Moodle.Controllers
             }
         }
 
-        private bool check_lecturer(int id, string day, string hour, int type)
+        private bool check_lecturer(int id, string day, string hour)
         {
 
             List<Courses> dbCourses = (from x in dal.Courses
@@ -319,7 +333,7 @@ namespace Collage_Moodle.Controllers
                     c_hour[0] = float.Parse(course.hour.Substring(0, 5).Replace(':', '.'));
                     c_hour[1] = float.Parse(course.hour.Substring(6, 5).Replace(':', '.'));
 
-                    if ((l_hour[0] > c_hour[0] && l_hour[0] < c_hour[1]) || (l_hour[1] > c_hour[0] && l_hour[1] < c_hour[1]) || (c_hour[0] > l_hour[0] && c_hour[0] < l_hour[1]))
+                    if ((l_hour[0] >= c_hour[0] && l_hour[0] < c_hour[1]) || (l_hour[1] > c_hour[0] && l_hour[1] <= c_hour[1]) || (c_hour[0] > l_hour[0] && c_hour[0] < l_hour[1]))
                     {
                         return false;
                     }
