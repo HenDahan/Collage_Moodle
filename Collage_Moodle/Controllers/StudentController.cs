@@ -95,6 +95,42 @@ namespace Collage_Moodle.Controllers
                 
         }
 
+        public ActionResult ViewGrades()
+        {
+            Users thisUser = (Users)Session["user"];
+            if (thisUser == null)
+                return RedirectToAction("Index", "Login");
+            else if (thisUser.permission != 0)
+                return perm.CheckPermission(thisUser);
+            else
+            {
+                List<Students> dbStudents = (from x in dal.Students
+                                                where x.Users_userID.Equals(thisUser.userID)
+                                                select x).ToList<Students>();
+                if (dbStudents.Count > 0)
+                {
+
+
+                    //if Moed B date passed.
+
+                    List<StudentModel> showStudents = new List<StudentModel>();
+                    foreach (Students s in dbStudents)
+                        showStudents.Add(new StudentModel { Courses_cName=s.Courses_cName, grade = s.grade });
+
+                    ViewExamGrades gradesView = new ViewExamGrades();
+                    gradesView.user = thisUser;
+                    gradesView.students = showStudents;
+                    return View(gradesView);
+                }
+                else
+                {
+                    TempData["Message"] = "You are not assigned to any course.";
+                    return perm.CheckPermission(thisUser);
+                }
+            }
+
+        }
+
 
         public ActionResult Exit()
         {

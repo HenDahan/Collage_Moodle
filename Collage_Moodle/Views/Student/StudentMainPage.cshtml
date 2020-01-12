@@ -20,22 +20,25 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-        <div class="form-group">
-            <div class="col-md-10 margin-top-10">
-                <input type="submit" value="View Schedule" class="btn btn-default"
-                       onclick="location.href='@Url.Action("ViewSchedule", "Student")'" />
-            </div>
-            <div class="col-md-10 margin-top-10">
-                <input type="submit" value="View Exam Schedule" class="btn btn-default"
-                       onclick="location.href='@Url.Action("ViewExamSchedule", "Student")'" />
-            </div>
-
-
-            <div class="col-md-10 margin-top-50">
-                <input type="submit" value="Exit" class="btn btn-default"
-                       onclick="location.href='@Url.Action("Exit", "Student")'" />
-            </div>
+    <div class="form-group">
+        <div class="col-md-10 margin-top-10">
+            <input type="submit" value="View Grades" class="btn btn-default"
+                   onclick="location.href='@Url.Action("ViewGrades", "Student")'" />
         </div>
+        <div class="col-md-10 margin-top-10">
+            <input type="submit" value="View Schedule" class="btn btn-default"
+                   onclick="location.href='@Url.Action("ViewSchedule", "Student")'" />
+        </div>
+        <div class="col-md-10 margin-top-10">
+            <input type="submit" value="View Exam Schedule" class="btn btn-default"
+                   onclick="location.href='@Url.Action("ViewExamSchedule", "Student")'" />
+        </div>
+
+        <div class="col-md-10 margin-top-50">
+            <input type="submit" value="Exit" class="btn btn-default"
+                   onclick="location.href='@Url.Action("Exit", "Student")'" />
+        </div>
+    </div>
     </div>
 </body>
 

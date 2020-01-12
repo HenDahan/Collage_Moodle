@@ -201,6 +201,7 @@
     <Content Include="Views\Student\ViewExamSchedule.cshtml" />
     <Content Include="Views\Lecturer\ViewStudentList.cshtml" />
     <Content Include="Views\Lecturer\ViewExamGrades.cshtml" />
+    <Content Include="Views\Student\ViewGrades.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -281,43 +281,54 @@ namespace Collage_Moodle.Controllers
                 string classroom = update_course.classroom;
                 int lecturerID = update_course.Lecturer_id;
 
-                List<Courses> dbCourse = (from x in dal.Courses
-                                        where (x.courseName.Equals(courseName))
-                                      select x).ToList<Courses>();
-                if (dbCourse.Count > 0)
+                List<Users> dbUser = (from x in dal.Users
+                                        where (x.userID.Equals(lecturerID) && x.permission.Equals(1))
+                                          select x).ToList<Users>();
+                if (dbUser.Count > 0)
                 {
-                    if (check_lecturer(lecturerID, day, hour))
+                    List<Courses> dbCourse = (from x in dal.Courses
+                                              where (x.courseName.Equals(courseName))
+                                              select x).ToList<Courses>();
+                    if (dbCourse.Count > 0)
                     {
-                        Courses tempCourse = dal.Courses.Single<Courses>(x => x.courseName == courseName);
-                        tempCourse.day = day;
-                        tempCourse.hour = hour;
-                        tempCourse.classroom = classroom;
-                        tempCourse.Users_lecturerID = lecturerID;
+                        if (check_lecturer(lecturerID, day, hour))
+                        {
+                            Courses tempCourse = dal.Courses.Single<Courses>(x => x.courseName == courseName);
+                            tempCourse.day = day;
+                            tempCourse.hour = hour;
+                            tempCourse.classroom = classroom;
+                            tempCourse.Users_lecturerID = lecturerID;
 
-                        dal.SaveChanges();
-                        TempData["Message"] = "The course data has been UPDATED successfully.";
-                        return perm.CheckPermission(user);
+                            dal.SaveChanges();
+                            TempData["Message"] = "The course data has been UPDATED successfully.";
+                            return perm.CheckPermission(user);
+                        }
+                        else
+                        {
+                            TempData["Message"] = "Error - The lecturer cannot lecture another course at the same time!";
+                            return View();
+                        }
                     }
                     else
                     {
-                        TempData["Message"] = "Error - The lecturer cannot lecture another course at the same time!";
-                        return View();
+                        if (check_lecturer(lecturerID, day, hour))
+                        {
+                            dal.Courses.Add(new Courses { courseName = courseName, day = day, hour = hour, classroom = classroom, Users_lecturerID = lecturerID });
+                            dal.SaveChanges();
+                            TempData["Message"] = "The course data has been CREATED successfully.";
+                            return perm.CheckPermission(user);
+                        }
+                        else
+                        {
+                            TempData["Message"] = "Error - The lecturer cannot lecture another course at the same time!";
+                            return View();
+                        }
                     }
                 }
                 else
                 {
-                    if (check_lecturer(lecturerID, day, hour))
-                    {
-                        dal.Courses.Add(new Courses { courseName = courseName, day = day, hour = hour, classroom = classroom, Users_lecturerID = lecturerID });
-                        dal.SaveChanges();
-                        TempData["Message"] = "The course data has been CREATED successfully.";
-                        return perm.CheckPermission(user);
-                    }
-                    else
-                    {
-                        TempData["Message"] = "Error - The lecturer cannot lecture another course at the same time!";
-                        return View();
-                    }
+                    TempData["Message"] = "Error - You can only assign Lecturers to be the lecturer of the course.";
+                    return View();
                 }
             }
         }
