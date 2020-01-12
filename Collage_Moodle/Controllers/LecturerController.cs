@@ -148,9 +148,6 @@ namespace Collage_Moodle.Controllers
                         List<Exams> dbExam = (from x in dal.Exams
                                               where (x.Courses_cName.Equals(courseN.course_name))
                                               select x).ToList<Exams>();
-                        //I need to check for moed A and moed B
-                        //checkDates(DateTime.Now, dbExam[0].date, dbExam[0].hour)
-                        //take it from down below.
 
                         //changes that moed A will always be first.
                         if (dbExam[0].moed.Equals('B'))
@@ -241,66 +238,75 @@ namespace Collage_Moodle.Controllers
                 List<Exams> dbExam = (from x in dal.Exams
                                       where (x.Courses_cName.Equals(course_name))
                                       select x).ToList<Exams>();
-                if (if_his_course(user.userID, course_name))
+                if (dbExam.Count == 2)
                 {
-                    //changes that moed A will always be first.
-                    if (dbExam[0].moed.Equals('B'))
+                    if (if_his_course(user.userID, course_name))
                     {
-                        dbExam.Add(dbExam[0]);
-                        dbExam.RemoveAt(0);
-                    }
+                        //changes that moed A will always be first.
+                        if (dbExam[0].moed.Equals('B'))
+                        {
+                            dbExam.Add(dbExam[0]);
+                            dbExam.RemoveAt(0);
+                        }
 
-                    //if moed B date passed.
-                    if (checkDates(DateTime.Now, dbExam[1].date, dbExam[1].hour))
-                    {
-                        List<Students> dbStudent = (from x in dal.Students
-                                                    where (x.Users_userID.Equals(student_id) && x.Courses_cName.Equals(course_name))
-                                                    select x).ToList<Students>();
-                        if (dbStudent.Count > 0)
+                        //if moed B date passed.
+                        if (checkDates(DateTime.Now, dbExam[1].date, dbExam[1].hour))
                         {
-                            Students tempStudent = dal.Students.Single<Students>(x => x.Courses_cName == course_name && x.Users_userID == student_id);
-                            tempStudent.grade = new_grade;
-                            dal.SaveChanges();
-                            TempData["Message"] = "Moed B grade Updated successfully";
-                            return perm.CheckPermission(user);
+                            List<Students> dbStudent = (from x in dal.Students
+                                                        where (x.Users_userID.Equals(student_id) && x.Courses_cName.Equals(course_name))
+                                                        select x).ToList<Students>();
+                            if (dbStudent.Count > 0)
+                            {
+                                Students tempStudent = dal.Students.Single<Students>(x => x.Courses_cName == course_name && x.Users_userID == student_id);
+                                tempStudent.grade = new_grade;
+                                dal.SaveChanges();
+                                TempData["Message"] = "Moed B grade Updated successfully";
+                                return perm.CheckPermission(user);
+                            }
+                            else
+                            {
+                                TempData["Message"] = "There is no such user ID studing that course.";
+                                return View();
+                            }
                         }
+                        //if moed B didn't pass but moed A passed.
+                        else if (checkDates(DateTime.Now, dbExam[0].date, dbExam[0].hour))
+                        {
+                            List<Students> dbStudent = (from x in dal.Students
+                                                        where (x.Users_userID.Equals(student_id) && x.Courses_cName.Equals(course_name))
+                                                        select x).ToList<Students>();
+                            if (dbStudent.Count > 0)
+                            {
+                                Students tempStudent = dal.Students.Single<Students>(x => x.Courses_cName == course_name && x.Users_userID == student_id);
+                                tempStudent.grade = new_grade;
+                                dal.SaveChanges();
+                                TempData["Message"] = "Moed A grade Updated successfully";
+                                return perm.CheckPermission(user);
+                            }
+                            else
+                            {
+                                TempData["Message"] = "There is no such user ID studing that course.";
+                                return View();
+                            }
+                        }
+                        //if none of the moeds started yet.
                         else
                         {
-                            TempData["Message"] = "There is no such user ID studing that course.";
+                            TempData["Message"] = "You cannot update a grade for this exam yet.(wait for the moed date to pass)";
                             return View();
                         }
+
+
                     }
-                    //if moed B didn't pass but moed A passed.
-                    else if (checkDates(DateTime.Now, dbExam[0].date, dbExam[0].hour))
-                    {
-                        List<Students> dbStudent = (from x in dal.Students
-                                                    where (x.Users_userID.Equals(student_id) && x.Courses_cName.Equals(course_name))
-                                                    select x).ToList<Students>();
-                        if (dbStudent.Count > 0)
-                        {
-                            Students tempStudent = dal.Students.Single<Students>(x => x.Courses_cName == course_name && x.Users_userID == student_id);
-                            tempStudent.grade = new_grade;
-                            dal.SaveChanges();
-                            TempData["Message"] = "Moed A grade Updated successfully";
-                            return perm.CheckPermission(user);
-                        }
-                        else
-                        {
-                            TempData["Message"] = "There is no such user ID studing that course.";
-                            return View();
-                        }
-                    }
-                    //if none of the moeds started yet.
                     else
                     {
-                        TempData["Message"] = "You cannot update a grade for this exam yet.(wait for the moed date to pass)";
+                        TempData["Message"] = "There is not one of your courses.";
                         return View();
                     }
-
                 }
                 else
                 {
-                    TempData["Message"] = "There is not one of your courses.";
+                    TempData["Message"] = "There are no signed exams for this course yet.";
                     return View();
                 }
             }
